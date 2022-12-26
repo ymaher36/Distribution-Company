@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'product',
+    'branch'
 ]
 
 MIDDLEWARE = [
@@ -76,10 +78,10 @@ WSGI_APPLICATION = 'distributioncompany.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'first_test', 
+        'NAME': 'first_test',
         'USER': 'postgres',
         'PASSWORD': 'admin',
-        'HOST': '127.0.0.1', 
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
