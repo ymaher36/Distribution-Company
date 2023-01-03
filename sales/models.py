@@ -2,17 +2,11 @@ import uuid
 
 from django.db import models
 
-from inventory.models import Branch, Product
+from inventory.models import Branch, Product, PricingList
 
 
 # Create your models here.
 
-class PricingList(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    purchasing_price = models.FloatField()
-    selling_price = models.FloatField()
-    end_date = models.DateTimeField(null=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
 
 
 class SellingChannel(models.Model):
@@ -39,7 +33,7 @@ class Order(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True)
     selling_channel = models.ForeignKey(SellingChannel, on_delete=models.PROTECT, null=True)
     total_price = models.FloatField(null=True)
-    create_date = models.DateTimeField(auto_now_add=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     receiving_date = models.DateField(null=True)
     number_of_boxes = models.FloatField(null=True)
     number_of_types = models.IntegerField(null=True)
@@ -55,3 +49,4 @@ class OrderProducts(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT, null=True)
     product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
     quantity = models.FloatField()
+    price = models.ForeignKey(PricingList, on_delete=models.PROTECT, null=True)

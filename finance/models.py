@@ -18,6 +18,7 @@ class Expense(models.Model):
     note = models.CharField(max_length=500, null=True)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     type = models.ForeignKey(ExpenseType, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 
 class IncomeType(models.Model):
@@ -31,3 +32,4 @@ class Income(models.Model):
     note = models.CharField(max_length=500, null=True)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     type = models.ForeignKey(IncomeType, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)

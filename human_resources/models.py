@@ -5,7 +5,7 @@ import uuid
 # Create your models here.
 class PhoneNumber(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    phone_number = models.IntegerField(null=True)
+    phone_number = models.CharField(max_length=20)
 
 
 class Role(models.Model):
