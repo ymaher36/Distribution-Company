@@ -9,20 +9,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>{% block title %}{% endblock %}</title>
+    <!-- Sneat -->
+    {% include 'sneat/header_links.html' %}
+    <!--EndSneat-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap"
           rel="stylesheet">
-    <link href="{% static 'bootstrap/css/bootstrap.rtl.min.css' %}" rel="stylesheet">
-    <link href="{% static 'global.css' %}" rel="stylesheet">
+
     {% block styles %}{% endblock %}
 
 </head>
 <body>
-{% include 'navbar.html' %}
-{% block body %}
-{% endblock %}
-<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        {% include 'sneat/side_drawer.html' %}
+        {#{% include 'navbar.html' %}#}
+
+        {% block body %}
+        {% endblock %}
+    </div>
+</div>
 {% block scripts %}{% endblock %}
+      <div class="layout-overlay layout-menu-toggle"></div>
+
+  {% include 'sneat/scripts.html' %}
 </body>
 </html>

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'sales',
     'human_resources',
     'index',
-    'finance'
+    'finance',
+    'locations'
 ]
 
 MIDDLEWARE = [

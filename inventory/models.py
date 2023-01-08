@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+from locations.models import Location
 
 
 # Create your models here.
@@ -24,11 +25,13 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+
 class PricingList(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     purchasing_price = models.FloatField()
     selling_price = models.FloatField()
     end_date = models.DateTimeField(null=True)
+
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -53,6 +56,7 @@ class Product(models.Model):
 class Branch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
 
 
 class ProductBranch(models.Model):

@@ -1,6 +1,8 @@
 from django.db import models
 import uuid
 
+from locations.models import Location
+
 
 # Create your models here.
 class PhoneNumber(models.Model):
@@ -21,4 +23,4 @@ class User(models.Model):
     national_id = models.IntegerField(null=True)
     birthdate = models.DateField(null=True)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True)
-    # home_location =
+    home_location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
