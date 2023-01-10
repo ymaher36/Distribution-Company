@@ -1,0 +1,33 @@
+<nav class="navbar navbar-example navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-ex-3"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-ex-3">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
+                   href="{% url "products" %}">المنتجات</a>
+                <a class="nav-item nav-link{% if is_edit_products %} active {% endif %}"
+                   href="{% url "edit_products" %}">تعديل و اضافة المنتجات</a>
+                <a class="nav-item nav-link{% if is_brand %} active {% endif %}" href="{% url "brands" %}">الماركات</a>
+            </div>
+
+
+        </div>
+    </div>
+</nav>
+{% if is_product %}
+
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> المنتجات</h4>
+{% elif is_edit_products %}
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> تعديل و اضافة المنتجات</h4>
+{% elif is_brand %}
+
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> الماركات</h4>
+{% endif %}

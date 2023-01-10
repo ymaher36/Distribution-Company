@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'human_resources',
     'index',
     'finance',
-    'locations'
+    'locations',
+    'pyarabic'
 ]
 
 MIDDLEWARE = [
@@ -79,11 +80,11 @@ WSGI_APPLICATION = 'tanzeem.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'db',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db',
-    },
-    'postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'first_test',
         'USER': 'postgres',

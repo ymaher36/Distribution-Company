@@ -22,5 +22,5 @@ class User(models.Model):
     end_work_date = models.DateTimeField(null=True)
     national_id = models.IntegerField(null=True)
     birthdate = models.DateField(null=True)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True)
-    home_location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
+    home_location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
