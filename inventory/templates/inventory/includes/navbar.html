@@ -13,9 +13,9 @@
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
                    href="{% url "products" %}">المنتجات</a>
-                <a class="nav-item nav-link{% if is_edit_products %} active {% endif %}"
-                   href="{% url "edit_products" %}">تعديل و اضافة المنتجات</a>
-                <a class="nav-item nav-link{% if is_brand %} active {% endif %}" href="{% url "brands" %}">الماركات</a>
+                <a class="nav-item nav-link{% if is_add_products %} active {% endif %}"
+                   href="{% url "add_products" %}">اضافة منتجات</a>
+                <a class="nav-item nav-link{% if is_brand %} active {% endif %}" href="{% url "brands" %}">الماركات و الأنواع</a>
             </div>
 
 
@@ -24,10 +24,10 @@
 </nav>
 {% if is_product %}
 
-    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> المنتجات</h4>
-{% elif is_edit_products %}
-    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> تعديل و اضافة المنتجات</h4>
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> المنتجات</h4>
+{% elif is_add_products %}
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span>اضافة منتجات</h4>
 {% elif is_brand %}
 
-    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن /</span> الماركات</h4>
+    <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> الماركات و الأنواع</h4>
 {% endif %}

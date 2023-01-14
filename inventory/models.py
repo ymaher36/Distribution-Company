@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 import uuid
 
@@ -45,6 +47,7 @@ class Product(models.Model):
         Brand, on_delete=models.CASCADE, null=False, verbose_name="ماركة المنتج")
     expire_at = models.DateField(null=True)
     price_list = models.ManyToManyField(PricingList)
+    created_at = models.DateField(auto_now_add=True, blank=True)
 
     def product_full_name(self):
         return self.product_category.name + ' -- ' + self.product_brand.name + ' -- ' + self.name
