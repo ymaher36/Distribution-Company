@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from inventory.models import Branch
+from inventory.products.models import Branch
 
 
 # Create your models here.

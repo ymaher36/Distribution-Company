@@ -12,10 +12,10 @@
         <div class="collapse navbar-collapse" id="navbar-ex-3">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
-                   href="{% url "products" %}">المنتجات</a>
+                   href="{% url "inventory:search_products" %}">المنتجات</a>
                 <a class="nav-item nav-link{% if is_add_products %} active {% endif %}"
-                   href="{% url "add_products" %}">اضافة منتجات</a>
-                <a class="nav-item nav-link{% if is_brand %} active {% endif %}" href="{% url "brands" %}">الماركات و الأنواع</a>
+                   href="{% url "inventory:add_products" %}">اضافة منتجات</a>
+                <a class="nav-item nav-link{% if is_brand %} active {% endif %}" href="{% url "inventory:brands" %}">الماركات و الأنواع</a>
             </div>
 
 

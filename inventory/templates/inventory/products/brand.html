@@ -8,17 +8,17 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
             <!-- Layout Demo -->
-            {% include 'inventory/includes/navbar.html' with is_brand=True  is_product=False is_add_products=False %}
-            <div class="row m-5">
+            {% include 'inventory/products/includes/navbar.html' with is_brand=True  is_product=False is_add_products=False %}
+            <div class="row">
                 <div class="col-xl ">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{% url 'add_brand' %}" method="POST">
+                            <form action="{% url 'inventory:add_brand' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label" for="brand-name-input">اسم المركة</label>
-                                    <input type="text" class="form-control" name="brand-name-input"
-                                           id="brand-name-input"
+                                    <label class="form-label" for="brand_name_input">اسم المركة</label>
+                                    <input type="text" class="form-control" name="brand_name_input"
+                                           id="brand_name_input"
                                            placeholder="مثال: عبورلاند, جهينة..."/>
                                 </div>
 
@@ -56,7 +56,7 @@
                                                         ><i class="bx bx-edit-alt me-1"></i> Edit</a
                                                         >
                                                         <a class="dropdown-item"
-                                                           href="{% url 'delete_brand' brand.id %}"
+                                                           href="{% url 'inventory:delete_brand' brand.id %}"
                                                         ><i class="bx bx-trash me-1"></i> حذف</a
                                                         >
                                                     </div>
@@ -77,12 +77,12 @@
                 <div class="col-xl ">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{% url 'add_category' %}" method="POST">
+                            <form action="{% url 'inventory:add_category' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label" for="category-name-input">اسم النوع</label>
-                                    <input type="text" class="form-control" name="category-name-input"
-                                           id="category-name-input"
+                                    <label class="form-label" for="category_name_input">اسم النوع</label>
+                                    <input type="text" class="form-control" name="category_name_input"
+                                           id="category_name_input"
                                            placeholder="مثال: جبنه, تونة..."/>
                                 </div>
 
@@ -120,7 +120,7 @@
                                                         ><i class="bx bx-edit-alt me-1"></i> Edit</a
                                                         >
                                                         <a class="dropdown-item"
-                                                           href="{% url 'delete_category' category.id %}"
+                                                           href="{% url 'inventory:delete_category' category.id %}"
                                                         ><i class="bx bx-trash me-1"></i> حذف</a
                                                         >
                                                     </div>

@@ -2,11 +2,13 @@ import uuid
 
 from django.db import models
 
-from inventory.models import Branch, Product, PricingList
+from human_resources.models import User
+from inventory.products.models import Branch, Product, PricingList
+from locations.models import Location
+from purchases.models import PurchaseProduct
 
 
 # Create your models here.
-
 
 
 class SellingChannel(models.Model):
@@ -23,7 +25,7 @@ class Customer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    # location =
+    location = models.ManyToManyField(Location)
     type = models.ForeignKey(CustomerType, on_delete=models.CASCADE)
 
 
@@ -35,18 +37,18 @@ class Order(models.Model):
     total_price = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     receiving_date = models.DateField(null=True)
-    number_of_boxes = models.FloatField(null=True)
-    number_of_types = models.IntegerField(null=True)
+    amount_of_boxes = models.FloatField(null=True)
+    amount_of_types = models.IntegerField(null=True)
+    amount_of_brands = models.IntegerField(null=True)
     note = models.CharField(max_length=400, null=True)
     state = models.CharField(max_length=20, null=False, blank=False, default='pending')
 
-    # create_user_id =
-    # delivery_user_id =
+    create_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delivery_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class OrderProducts(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE, null=True)
     quantity = models.FloatField()
-    price = models.ForeignKey(PricingList, on_delete=models.CASCADE, null=True)

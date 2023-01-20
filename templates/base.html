@@ -1,7 +1,7 @@
 {% load static %}
 
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="light-style">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -30,9 +30,10 @@
         {% endblock %}
     </div>
 </div>
-{% block scripts %}{% endblock %}
 <div class="layout-overlay layout-menu-toggle"></div>
 
 {% include 'sneat/scripts.html' %}
+{% block scripts %}{% endblock %}
+
 </body>
 </html>

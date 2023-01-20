@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    المنتجات
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'inventory/products/includes/navbar.html' with is_brand=False  is_product=True is_add_products=False %}
+            <div class="row">
+                <div class="col-xl">
+                    <div class="card mb-4">
+                        <div class="card-header col">
+                            <div class="row mb-4">
+                                <h5 class="mb-0">ابحث عن منتج</h5>
+                            </div>
+                            <div class="row my-4">
+                                <small class="text-muted">يمكنك البحث باستخدام خانة واحدة أو اكثر</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form action="{% url 'inventory:search_products' %}" method="GET">
+                                <div class="row">
+                                    <div class="mb-3 col">
+                                        <label class="form-label" for="basic-product_search_name_input-fullname">اسم
+                                            المنتج</label>
+                                        <input type="text" class="form-control" id="product_search_name_input"
+                                               name="product_search_name_input">
+                                    </div>
+                                    <div class="mb-3 col">
+                                        <label for="brand_search_choose_input" class="form-label">الماركات</label>
+                                        <select id="brand_search_choose_input"
+                                                name="brand_search_choose_input"
+                                                class="select2 form-select form-select-lg" data-allow-clear="false">
+                                            <option disabled hidden selected value="">قائمة الماركات</option>
+                                            {% for brand in brands %}
+                                                <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col">
+
+                                        <label for="category_search_choose_input" class="form-label">النوع</label>
+                                        <select id="category_search_choose_input"
+                                                name="category_search_choose_input"
+                                                class="select2 form-select form-select-lg" data-allow-clear="false">
+                                            <option disabled hidden selected value="">قائمة الأنواع</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">بحث</button>
+                            </form>
+                            <div class="row">
+                                <div class="divider ">
+                                    <div class="divider-text"></div>
+                                </div>
+                                <h5 class="card-header">جدول المنتجات</h5>
+                                <div class="table-responsive text-nowrap" style="min-height: 400px">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>الأسم</th>
+                                            <th>الماركة</th>
+                                            <th>النوع</th>
+                                            <th>أجراءات</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for product in products %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ product.name }}</strong>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ product.product_brand }}</strong>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ product.product_category }}</strong>
+                                                </td>
+
+
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                                data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                                <i class="bx bx-edit-alt me-1"></i>
+                                                                تعديل
+                                                            </a>
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'inventory:delete_product' product.id %}">
+                                                                <i class="bx bx-trash me-1"></i>
+                                                                حذف
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--/ Layout Demo -->
+        </div>
+        <!-- / Content -->
+
+
+        <div class="content-backdrop fade"></div>
+    </div>
+
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/flatpickr/flatpickr.css' %}">
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/flatpickr/flatpickr.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+
+    <script>
+        const brandSelect = $("#brand_search_choose_input")
+        const categorySelect = $("#category_search_choose_input")
+        brandSelect.select2()
+        categorySelect.select2()
+
+    </script>
+{% endblock %}

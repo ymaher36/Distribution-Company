@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
     اضافة منتجات
 {% endblock %}
@@ -8,12 +9,12 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
             <!-- Layout Demo -->
-            {% include 'inventory/includes/navbar.html' with is_brand=False  is_product=False is_add_products=True %}
+            {% include 'inventory/products/includes/navbar.html' with is_brand=False  is_product=False is_add_products=True %}
 
             <div class="card mb-4">
                 <h5 class="card-header">إضافة منتج جديد</h5>
                 <div class="card-body">
-                    <form action="{% url 'add_products' %}" method="POST">
+                    <form action="{% url 'inventory:add_products' %}" method="POST">
                         {% csrf_token %}
 
                         <div class="row">
@@ -23,8 +24,8 @@
                                     <input
                                             type="text"
                                             class="form-control"
-                                            id="product-name-input"
-                                            name="product-name-input"
+                                            id="product_name_input"
+                                            name="product_name_input"
                                     />
                                 </div>
 
@@ -33,20 +34,16 @@
 
                                 <div class="mb-3">
                                     <label for="brand_choose_input" class="form-label">اختر الماركات</label>
-                                    <input
-                                            class="form-control"
-                                            list="brandlistOptions"
-                                            id="brand_choose_input"
+                                    <select id="brand_choose_input"
                                             name="brand_choose_input"
-                                            placeholder="ابحث عن ماركة..."
-                                    />
-                                    <datalist id="brandlistOptions">
+                                            class="select2 form-select form-select-lg" data-allow-clear="false">
+                                        <option disabled hidden selected value="">ابحث عن ماركة...</option>
                                         {% for brand in brands %}
 
                                             <option value="{{ brand.name }}"></option>
 
                                         {% endfor %}
-                                    </datalist>
+                                    </select>
                                 </div>
 
                             </div>
@@ -58,7 +55,7 @@
                                             id="category_choose_input"
                                             name="category_choose_input"
                                             aria-label="Default select example">
-                                        <option selected>قائمة الأنواع</option>
+                                        <option disabled hidden selected>قائمة الأنواع</option>
                                         {% for category in categories %}
                                             <option value="{{ category.id }}">{{ category.name }}</option>
                                         {% endfor %}
@@ -69,16 +66,7 @@
 
                             </div>
                         </div>
-                        <div class="mb-3 row">
-                            <label for="expire_at_date_input" class="col-md-2 col-form-label">تاريخ انتهاء
-                                الصلاحية</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="date" value="يوم/شهر/سنه"
-                                       id="expire_at_date_input"
-                                       name="expire_at_date_input"
-                                />
-                            </div>
-                        </div>
+
                         <button type="submit" class="btn btn-primary m-2">إضافة</button>
                     </form>
                     <div class="row">
@@ -93,7 +81,6 @@
                                     <th>الأسم</th>
                                     <th>الماركة</th>
                                     <th>النوع</th>
-                                    <th>تاريخ انتهاء الصلاحية</th>
                                     <th>أجراءات</th>
                                 </tr>
                                 </thead>
@@ -109,10 +96,6 @@
                                         <td>
                                             <strong>{{ product.product_category }}</strong>
                                         </td>
-
-                                        <td>
-                                            <strong>{{ product.expire_at }}</strong>
-                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -124,7 +107,7 @@
                                                     ><i class="bx bx-edit-alt me-1"></i> Edit</a
                                                     >
                                                     <a class="dropdown-item"
-                                                       href="{% url 'delete_product' product.id %}"
+                                                       href="{% url 'inventory:delete_product' product.id %}"
                                                     ><i class="bx bx-trash me-1"></i> حذف</a
                                                     >
                                                 </div>
@@ -151,4 +134,14 @@
         <div class="content-backdrop fade"></div>
     </div>
 
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script>
+        $("#brand_choose_input").select2()
+        $("#category_choose_input").select2()
+    </script>
 {% endblock %}
