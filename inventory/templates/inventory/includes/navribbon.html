@@ -1,14 +1,18 @@
 {% if which_nav == 'products' %}
     {% if is_product %}
-
         <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> المنتجات</h4>
     {% elif is_add_products %}
         <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span>اضافة منتجات</h4>
     {% elif is_brand %}
-
         <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> الماركات و الأنواع</h4>
     {% endif %}
 {% endif %}
 {% if which_nav == 'branches' %}
-    branches
+    {% if is_branch_settings %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> إعدادات الفروع</h4>
+    {% elif is_add_branch %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> اضافة فرع</h4>
+    {% elif is_branch_employee %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> موظفين الفروع</h4>
+    {% endif %}
 {% endif %}
