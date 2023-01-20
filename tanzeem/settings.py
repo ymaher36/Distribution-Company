@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'index',
     'finance',
     'locations',
+    'purchases',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 

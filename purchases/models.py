@@ -2,7 +2,8 @@ import uuid
 
 from django.db import models
 
-from inventory.products.models import Product, Branch
+from inventory.branches.models import Branch
+from inventory.products.models import Product
 from locations.models import Location
 
 

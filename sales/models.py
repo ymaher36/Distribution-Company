@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 
 from human_resources.models import User
-from inventory.products.models import Branch, Product, PricingList
+from inventory.branches.models import Branch
 from locations.models import Location
 from purchases.models import PurchaseProduct
 
@@ -43,8 +43,8 @@ class Order(models.Model):
     note = models.CharField(max_length=400, null=True)
     state = models.CharField(max_length=20, null=False, blank=False, default='pending')
 
-    create_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    delivery_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="create_user")
+    delivered_by = models.ForeignKey(User, on_delete=models.CASCADE,null=True, related_name="deliver_user")
 
 
 class OrderProducts(models.Model):
@@ -52,3 +52,10 @@ class OrderProducts(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE, null=True)
     quantity = models.FloatField()
+
+
+class PricingList(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    selling_price = models.FloatField()
+    end_date = models.DateTimeField(null=True)
+    product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE)

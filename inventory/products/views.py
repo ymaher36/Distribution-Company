@@ -1,13 +1,9 @@
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
 from inventory.products.forms import addBrandForm, addCategoryForm, addProductForm, searchProductForm
 from inventory.products.models import Brand, ProductCategory, Product
-
-
-def warehouse(request):
-    return None
 
 
 def search_products(request):
@@ -25,7 +21,6 @@ def search_products(request):
             product_name = form.cleaned_data['product_search_name_input']
             brand = form.cleaned_data['product_search_name_input']
             product_name = form.cleaned_data['product_search_name_input']
-
 
     return render(request, 'inventory/products/products.html', context)
 

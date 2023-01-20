@@ -1,0 +1,14 @@
+{% if which_nav == 'products' %}
+    {% if is_product %}
+
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> المنتجات</h4>
+    {% elif is_add_products %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span>اضافة منتجات</h4>
+    {% elif is_brand %}
+
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">المخازن/ </span> الماركات و الأنواع</h4>
+    {% endif %}
+{% endif %}
+{% if which_nav == 'branches' %}
+    branches
+{% endif %}
