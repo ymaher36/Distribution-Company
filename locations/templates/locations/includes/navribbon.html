@@ -1,0 +1,7 @@
+{% if which_nav == 'addresses' %}
+    {% if is_addresses %}
+        <h4 class="fw-bold py-3 m-4">العناوين</h4>
+    {% elif is_add_address %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">العناوين/ </span>اضافة عنوان</h4>
+    {% endif %}
+{% endif %}

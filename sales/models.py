@@ -4,7 +4,7 @@ from django.db import models
 
 from human_resources.models import User
 from inventory.branches.models import Branch
-from locations.models import Location
+from locations.addresses.models import Location
 from purchases.models import PurchaseProduct
 
 

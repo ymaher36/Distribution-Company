@@ -4,7 +4,7 @@ from django.db import models
 
 from inventory.branches.models import Branch
 from inventory.products.models import Product
-from locations.models import Location
+from locations.addresses.models import Location
 
 
 # Create your models here.

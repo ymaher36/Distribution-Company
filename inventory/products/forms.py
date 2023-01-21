@@ -1,33 +1,31 @@
 from django import forms
 
 
-class addBrandForm(forms.Form):
+class AddBrandForm(forms.Form):
     brand_name_input = forms.CharField(
         required=True
     )
 
 
-class addCategoryForm(forms.Form):
+class AddCategoryForm(forms.Form):
     category_name_input = forms.CharField(
         required=True
     )
 
 
-class addProductForm(forms.Form):
+class AddProductForm(forms.Form):
     product_name_input = forms.CharField(
         required=True
     )
-    brand_choose_input = forms.CharField(
+    brand_choose_input = forms.UUIDField(
         required=True
     )
-    category_choose_input = forms.CharField(
+    category_choose_input = forms.UUIDField(
         required=True
     )
 
 
-
-class searchProductForm(forms.Form):
+class SearchProductForm(forms.Form):
     product_search_name_input = forms.CharField()
     brand_search_choose_input = forms.CharField()
     category_search_choose_input = forms.CharField()
-
