@@ -12,7 +12,8 @@ class Governorate(models.Model):
 class District(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     governorate = models.ForeignKey(Governorate, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name_ar = models.CharField(max_length=50)
+    name_en = models.CharField(max_length=50)
 
 
 class Location(models.Model):
