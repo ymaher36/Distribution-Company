@@ -32,7 +32,6 @@ def add_address(request):
 def get_district_related_to_governorate(request):
     select2_data_list = []
     governorate_id = request.GET.get('governorate_id')
-    print(governorate_id)
     districts = District.objects.filter(governorate_id=governorate_id)
     for district in districts:
         select2_data_list.append({'id': district.id, 'name': district.name_ar})
