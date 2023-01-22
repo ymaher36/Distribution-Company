@@ -15,14 +15,44 @@
                     <div class="card mb-4">
                         <div class="card-header col">
                             <div class="row mb-4">
-                                <h5 class="mb-0">ابحث عن منتج</h5>
-                            </div>
-                            <div class="row my-4">
-                                <small class="text-muted">يمكنك البحث باستخدام خانة واحدة أو اكثر</small>
+                                <h5 class="mb-0">إضافة عنوان جديد</h5>
                             </div>
                         </div>
                         <div class="card-body">
                             <form action="{% url 'locations:add_address' %}" method="GET">
+                                <div class="row">
+                                    <div class="col">
+
+                                        <div class="mb-3">
+                                            <label for="governorate_choose_input" class="form-label">اختر
+                                                المحافظة</label>
+                                            <select id="governorate_choose_input"
+                                                    name="governorate_choose_input"
+                                                    class="select2 form-select form-select-lg" data-allow-clear="false">
+                                                <option disabled hidden selected value="">ابحث عن محافظة...</option>
+                                                {% for governorate in governorates %}
+                                                    <option value="{{ governorate.id }}">{{ governorate.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <div class="mb-3">
+                                            <label for="district_choose_input" class="form-label">اختر المنطقة</label>
+                                            <select class="form-select"
+                                                    id="district_choose_input"
+                                                    name="district_choose_input"
+                                                    aria-label="Default select example">
+                                                <option disabled hidden selected>ابحث عن منطقة...</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary m-2">إضافة</button>
                             </form>
                         </div>
                     </div>
@@ -30,4 +60,37 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script>
+        $(() => {
+            governorate_choose_input = $("#governorate_choose_input")
+            district_choose_input = $("#district_choose_input")
+
+            district_choose_input.select2()
+            district_choose_input.attr('disabled', true)
+
+            governorate_choose_input.select2()
+            governorate_choose_input.on('change', async (e) => {
+                const governorate_value = e.target.value
+                try {
+                    const response = await fetch(`/address/get_district_related_to_governorate?governorate_id=${governorate_value}`)
+                    const data = await response.json();
+                    district_choose_input.empty()
+                    data.forEach(elem => {
+                        district_choose_input.append(new Option(elem.name, elem.id, false, false))
+                    })
+                    district_choose_input.attr('disabled', false)
+                } catch (e) {
+                    console.error(e)
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
