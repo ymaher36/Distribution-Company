@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-from locations.models import Location
+from locations.addresses.models import Location
 
 
 # Create your models here.

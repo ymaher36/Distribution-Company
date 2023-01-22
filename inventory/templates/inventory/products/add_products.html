@@ -9,7 +9,7 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
             <!-- Layout Demo -->
-            {% include 'inventory/products/includes/navbar.html' with is_brand=False  is_product=False is_add_products=True %}
+            {% include 'inventory/products/../includes/navbar.html' with which_nav="products" is_add_products=True %}
 
             <div class="card mb-4">
                 <h5 class="card-header">إضافة منتج جديد</h5>
@@ -40,7 +40,7 @@
                                         <option disabled hidden selected value="">ابحث عن ماركة...</option>
                                         {% for brand in brands %}
 
-                                            <option value="{{ brand.name }}"></option>
+                                            <option value="{{ brand.id }}">{{ brand.name }}</option>
 
                                         {% endfor %}
                                     </select>
@@ -104,7 +104,7 @@
                                                 </button>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="javascript:void(0);"
-                                                    ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                                                    ><i class="bx bx-edit-alt me-1"></i> تعديل</a
                                                     >
                                                     <a class="dropdown-item"
                                                        href="{% url 'inventory:delete_product' product.id %}"

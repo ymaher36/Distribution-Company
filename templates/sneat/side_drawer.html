@@ -76,8 +76,8 @@
             <ul class="menu-sub">
 
                 <li class="menu-item">
-                    <a href="pages-account-settings-account.html" class="menu-link">
-                        <div data-i18n="Account">إعدادات المخزون</div>
+                    <a href="{% url 'inventory:branches_settings' %}" class="menu-link">
+                        <div data-i18n="Account">إعدادات الفروع</div>
                     </a>
                 </li>
                 <li class="menu-item">
@@ -85,6 +85,7 @@
                         <div data-i18n="Account">المنتجات</div>
                     </a>
                 </li>
+
                 <li class="menu-item">
                     <a href="pages-account-settings-notifications.html" class="menu-link">
                         <div data-i18n="Notifications">Notifications</div>
@@ -96,6 +97,12 @@
                     </a>
                 </li>
             </ul>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'locations:view_addresses' %}" class="menu-link">
+                <i class='menu-icon tf-icons bx bx-location-plus'></i>
+                <div data-i18n="Basic">العناوين</div>
+            </a>
         </li>
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">

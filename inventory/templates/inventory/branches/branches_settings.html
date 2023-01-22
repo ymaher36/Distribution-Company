@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    المنتجات
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'inventory/products/../includes/navbar.html' with which_nav="branches" is_branch_settings=True %}
+
+            <div class="card mb-4">
+                <h5 class="card-header">إضافة منتج جديد</h5>
+                <div class="card-body">
+                    <form action="{% url 'inventory:add_products' %}" method="POST">
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

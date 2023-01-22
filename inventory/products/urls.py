@@ -11,5 +11,4 @@ urlpatterns = [
     path("delete_brand/<uuid:brand_id>/", views.delete_brand, name='delete_brand'),
     path("add_category/", views.add_category, name='add_category'),
     path("delete_category/<uuid:category_id>/", views.delete_category, name='delete_category'),
-    path("warehouse/", views.warehouse, name='warehouse')
 ]

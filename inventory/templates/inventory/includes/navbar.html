@@ -1,0 +1,38 @@
+<nav class="navbar navbar-example navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar-ex-3"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% if which_nav == 'products' %}
+            <div class="collapse navbar-collapse" id="navbar-ex-3">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
+                       href="{% url "inventory:search_products" %}">المنتجات</a>
+                    <a class="nav-item nav-link{% if is_add_products %} active {% endif %}"
+                       href="{% url "inventory:add_products" %}">اضافة منتجات</a>
+                    <a class="nav-item nav-link{% if is_brand %} active {% endif %}"
+                       href="{% url "inventory:brands" %}">الماركات و الأنواع</a>
+                </div>
+            </div>
+        {% endif %}
+        {% if which_nav == "branches" %}
+        <div class="collapse navbar-collapse" id="navbar-ex-3">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-item nav-link  {% if is_branch_settings %} active {% endif %}"
+                       href="{% url "inventory:branches_settings" %}">إعدادات الفروع</a>
+                    <a class="nav-item nav-link{% if is_add_branch %} active {% endif %}"
+                       href="#">اضافة فرع</a>
+                    <a class="nav-item nav-link{% if is_branch_employee %} active {% endif %}"
+                       href="#">موظفين الفروع</a>
+                </div>
+            </div>
+        {% endif %} 
+    </div>
+</nav>
+{% include 'inventory/includes/navribbon.html'  %}
+

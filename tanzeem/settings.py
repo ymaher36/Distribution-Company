@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'human_resources',
     'index',
     'finance',
-    'locations',
+    'purchases',
+    'locations'
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 

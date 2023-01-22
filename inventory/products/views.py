@@ -1,13 +1,9 @@
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from inventory.products.forms import addBrandForm, addCategoryForm, addProductForm, searchProductForm
+from inventory.products.forms import AddBrandForm, AddCategoryForm, AddProductForm, SearchProductForm
 from inventory.products.models import Brand, ProductCategory, Product
-
-
-def warehouse(request):
-    return None
 
 
 def search_products(request):
@@ -20,12 +16,11 @@ def search_products(request):
         'categories': categories
     }
     if request.method == "GET":
-        form = searchProductForm(request.GET)
+        form = SearchProductForm(request.GET)
         if form.is_valid():
             product_name = form.cleaned_data['product_search_name_input']
             brand = form.cleaned_data['product_search_name_input']
             product_name = form.cleaned_data['product_search_name_input']
-
 
     return render(request, 'inventory/products/products.html', context)
 
@@ -36,7 +31,7 @@ def add_products(request):
     products = Product.objects.all().order_by("-created_at")[:10]
 
     if request.method == "POST":
-        form = addProductForm(request.POST)
+        form = AddProductForm(request.POST)
         if form.is_valid():
             product_name = form.cleaned_data['product_name_input']
             category = ProductCategory.objects.filter(pk=form.cleaned_data['category_choose_input']).first()
@@ -72,7 +67,7 @@ def brands(request):
 
 def add_brand(request):
     if request.method == "POST":
-        form = addBrandForm(request.POST)
+        form = AddBrandForm(request.POST)
         if form.is_valid():
             brand_name = form.cleaned_data['brand_name_input']
             brand = Brand(name=brand_name)
@@ -90,7 +85,7 @@ def delete_brand(request, brand_id):
 
 def add_category(request):
     if request.method == "POST":
-        form = addCategoryForm(request.POST)
+        form = AddCategoryForm(request.POST)
         if form.is_valid():
             category_name = form.cleaned_data['category_name_input']
             category = ProductCategory(name=category_name)
