@@ -19,7 +19,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="{% url 'locations:add_address' %}" method="GET">
+                            <form action="{% url 'locations:add_address' %}" method="POST">
+                                {% csrf_token %}
                                 <div class="row">
                                     <div class="col">
 
@@ -48,6 +49,79 @@
                                                 <option disabled hidden selected>ابحث عن منطقة...</option>
                                             </select>
                                         </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label" for="street_name_input">ادخل الشارع</label>
+                                        <input type="text" id="street_name_input" name="street_name_input"
+                                               placeholder="مثال: شارع النقل و الهندسة..."
+                                               class="form-control bootstrap-maxlength-example" maxlength="25"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="other_input">أدخل أي معلومات إضافية</label>
+                                        <textarea id="other_input" name="other_input"
+                                                  placeholder="مثال: بجانب صيدلية محمد هشام"
+                                                  class="form-control bootstrap-maxlength-example" rows="3"
+                                                  maxlength="500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="divider ">
+                                        <div class="divider-text"></div>
+                                    </div>
+                                    <h5 class="card-header">جدول بآخر 10 عناوين تمت إضافتها</h5>
+                                    <div class="table-responsive text-nowrap">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>المحافظة</th>
+                                                <th>المنطقة</th>
+                                                <th>الشارع</th>
+                                                <th>معلومات اضافية</th>
+                                                <th>أجراءات</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for address in latest_addresses %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ address.governorate }}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>{{ address.district.name_ar }}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>{{ address.street }}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>{{ address.other }}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button type="button"
+                                                                    class="btn p-0 dropdown-toggle hide-arrow"
+                                                                    data-bs-toggle="dropdown">
+                                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="javascript:void(0);"
+                                                                ><i class="bx bx-edit-alt me-1"></i> تعديل</a
+                                                                >
+                                                                <a class="dropdown-item"
+                                                                   href="{% url 'locations:delete_address' address.id %}">
+                                                                    <i class="bx bx-trash me-1"></i>
+                                                                    حذف</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+
+                                            </tbody>
+                                        </table>
 
                                     </div>
                                 </div>

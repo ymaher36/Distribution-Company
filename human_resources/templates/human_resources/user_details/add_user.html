@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    اضافة منتجات
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'human_resources/includes/navbar.html' with which_nav="user_details" is_add_user=True %}
+
+            <div class="card mb-4">
+                <h5 class="card-header">ابحث عن موظف</h5>
+                <div class="card-body">
+                    <form action="{% url 'human_resources:users.details' %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    ddd
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    ddd
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    ddd
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

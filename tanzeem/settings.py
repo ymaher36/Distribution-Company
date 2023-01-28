@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'index',
     'finance',
     'purchases',
-    'locations'
+    'locations',
+
 ]
 
 MIDDLEWARE = [

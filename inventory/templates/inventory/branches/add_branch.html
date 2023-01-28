@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    المنتجات
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'inventory/products/../includes/navbar.html' with which_nav="branches" is_add_branch=True %}
+
+            <div class="card mb-4">
+                <h5 class="card-header">إضافة فرع جديد</h5>
+                <div class="card-body">
+                    <form action="{% url 'inventory:add_products' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-4 mb-3">
+                                <label class="form-label" for="branch_name_input">ادخل اسم الفرع</label>
+                                <input type="text" id="branch_name_input" name="branch_name_input"
+                                       class="form-control bootstrap-maxlength-example" maxlength="50"/>
+                            </div>
+                            <div class="col-2 mb-3">
+
+                                <label class="form-label" for="branch_phone_number_input">ادخل رقم هاتف الفرع</label>
+                                <input type="tel" id="branch_phone_number_input" name="branch_phone_number_input"
+                                       class="form-control bootstrap-maxlength-example"/>
+                            </div>
+                            <div class="col-6 ">
+
+                                <div class="col ">
+                                    <label for="address_choose_input" class="form-label">اختر العنوان</label>
+                                    <small class="text-muted mx-3">يجب عليك تسجيل العنوان مسبقًا في الإدارات
+                                        العناوين </small>
+                                    <a class="ml-5" target="_blank" href="{% url "locations:add_address" %}"><small>إلى صفحة إضافة العناوين</small></a>
+                                </div>
+                                <select class="form-select"
+                                        id="address_choose_input"
+                                        name="address_choose_input"
+                                        aria-label="Default select example">
+                                    <option disabled hidden selected>ابحث عن عنوان...</option>
+                                    {% for address in addresses %}
+                                        <option value={{ address.id }}>{{ address.district.governorate.name }}---{{ address.district.name_ar }}---{{ address.street }}</option>
+
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" id="address_table_row">
+                            <h5 class="card-header">تفاصيل العنوان المختار</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-light" id="address_table">
+                                    <thead>
+                                    <tr>
+                                        <th>المحافظة</th>
+                                        <th>المنطقة</th>
+                                        <th>الشارع</th>
+                                        <th>معلومات اضافية</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="address_table_body">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-5">إضافة</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script>
+        $(() => {
+            const address_choose_input = $('#address_choose_input')
+            const address_table_row = $('#address_table_row')
+            const address_table = $('#address_table')
+            const address_table_body = $('#address_table_body')
+            address_table_row.hide()
+            address_choose_input.select2()
+
+            address_choose_input.on('change', async (e) => {
+                const address_value = e.target.value
+                try {
+                    const response = await fetch(`/branches/get_address_data?address_id=${address_value}`)
+                    const data = await response.json();
+                    address_table_body.append(`<tr><td>${data.governorate}</td><td>${data.district}</td><td>${data.street}</td><td>${data.other}</td></tr>`)
+                    address_table_row.show()
+
+                } catch (e) {
+                    console.error(e)
+                }
+            })
+
+        })
+
+
+    </script>
+{% endblock %}

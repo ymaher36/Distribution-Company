@@ -20,5 +20,5 @@ class Location(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     street = models.CharField(max_length=50)
     district = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
-    other = models.CharField(max_length=300)
+    other = models.CharField(max_length=500)
     # lat_lng

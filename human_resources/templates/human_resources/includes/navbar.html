@@ -8,15 +8,15 @@
         >
             <span class="navbar-toggler-icon"></span>
         </button>
-        {% if which_nav == 'products' %}
+        {% if which_nav == 'user_details' %}
             <div class="collapse navbar-collapse" id="navbar-ex-3">
                 <div class="navbar-nav ml-auto">
-                    <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
-                       href="{% url "inventory:search_products" %}">المنتجات</a>
-                    <a class="nav-item nav-link{% if is_add_products %} active {% endif %}"
-                       href="{% url "inventory:add_products" %}">اضافة منتجات</a>
-                    <a class="nav-item nav-link{% if is_brand %} active {% endif %}"
-                       href="{% url "inventory:brands" %}">الماركات و الأنواع</a>
+                    <a class="nav-item nav-link  {% if is_user_detalis %} active {% endif %}"
+                       href="{% url "human_resources:users.details" %}">قائمة الموظفين</a>
+                    <a class="nav-item nav-link{% if is_user_accounts %} active {% endif %}"
+                       href="{% url "inventory:add_products" %}">حسابات الموظفين</a>
+                    <a class="nav-item nav-link{% if is_add_user %} active {% endif %}"
+                       href="{% url "inventory:brands" %}">إضافة موظف</a>
                 </div>
             </div>
         {% endif %}

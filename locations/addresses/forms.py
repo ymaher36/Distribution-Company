@@ -2,12 +2,15 @@ from django import forms
 
 
 class AddAddress(forms.Form):
-    street_name_input = forms.CharField(
+    governorate_choose_input = forms.CharField(
         required=True
     )
-    district_id_input = forms.UUIDField(
+    district_choose_input = forms.CharField(
         required=True
     )
     other_input = forms.CharField(
+        required=False
+    )
+    street_name_input = forms.CharField(
         required=True
     )
