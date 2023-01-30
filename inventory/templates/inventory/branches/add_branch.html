@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    المنتجات
+    إضافة فرع
 {% endblock %}
 {% block body %}
     <div class="content-wrapper">
@@ -32,21 +32,29 @@
 
                                 <div class="col ">
                                     <label for="address_choose_input" class="form-label">اختر العنوان</label>
-                                    <small class="text-muted mx-3">يجب عليك تسجيل العنوان مسبقًا في الإدارات
-                                        العناوين </small>
-                                    <a class="ml-5" target="_blank" href="{% url "locations:add_address" %}"><small>إلى صفحة إضافة العناوين</small></a>
+
                                 </div>
-                                <select class="form-select"
-                                        id="address_choose_input"
-                                        name="address_choose_input"
-                                        aria-label="Default select example">
-                                    <option disabled hidden selected>ابحث عن عنوان...</option>
-                                    {% for address in addresses %}
-                                        <option value={{ address.id }}>{{ address.district.governorate.name }}---{{ address.district.name_ar }}---{{ address.street }}</option>
+                                <div class="col">
 
-                                    {% endfor %}
+                                    <select class="form-select"
+                                            id="address_choose_input"
+                                            name="address_choose_input"
+                                            aria-label="Default select example">
+                                        <option disabled hidden selected>ابحث عن عنوان...</option>
+                                        {% for address in addresses %}
+                                            <option value={{ address.id }}>{{ address.district.governorate.name }}---{{ address.district.name_ar }}---{{ address.street }}</option>
 
-                                </select>
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <small class="text-muted">يجب عليك تسجيل العنوان مسبقًا في الإدارات
+                                        العناوين </small>
+                                    <br/>
+                                    <a class="ml-5" target="_blank" href="{% url "locations:add_address" %}"><small>إلى
+                                        صفحة إضافة العناوين</small></a>
+                                </div>
                             </div>
                         </div>
                         <div class="row" id="address_table_row">

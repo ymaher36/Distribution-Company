@@ -14,7 +14,7 @@
                     <a class="nav-item nav-link  {% if is_product %} active {% endif %}"
                        href="{% url "inventory:search_products" %}">المنتجات</a>
                     <a class="nav-item nav-link{% if is_add_products %} active {% endif %}"
-                       href="{% url "inventory:add_products" %}">اضافة منتجات</a>
+                       href="{% url "inventory:add_products" %}">إضافة منتجات</a>
                     <a class="nav-item nav-link{% if is_brand %} active {% endif %}"
                        href="{% url "inventory:brands" %}">الماركات و الأنواع</a>
                 </div>
@@ -24,11 +24,11 @@
         <div class="collapse navbar-collapse" id="navbar-ex-3">
                 <div class="navbar-nav ml-auto">
                     <a class="nav-item nav-link  {% if is_branch_settings %} active {% endif %}"
-                       href="{% url "inventory:branches_settings" %}">إعدادات الفروع</a>
+                       href="{% url "inventory:branches_settings" %}">إعدادات الافرع</a>
                     <a class="nav-item nav-link{% if is_add_branch %} active {% endif %}"
-                       href="{% url "inventory:add_branch" %}">اضافة فرع</a>
+                       href="{% url "inventory:add_branch" %}">إضافة فرع</a>
                     <a class="nav-item nav-link{% if is_branch_employee %} active {% endif %}"
-                       href="{% url "inventory:add_user_to_branch" %}">موظفين الفروع</a>
+                       href="{% url "inventory:add_user_to_branch" %}">موظفين الافرع</a>
                 </div>
             </div>
         {% endif %} 

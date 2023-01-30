@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    اضافة منتجات
+    إضافة موظف
 {% endblock %}
 {% block body %}
     <div class="content-wrapper">
@@ -14,23 +14,56 @@
             <div class="card mb-4">
                 <h5 class="card-header">ابحث عن موظف</h5>
                 <div class="card-body">
-                    <form action="{% url 'human_resources:users.details' %}" method="POST">
+                    <form action="{% url 'human_resources:users_details' %}" method="POST">
                         {% csrf_token %}
 
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    ddd
+                                    <label for="user_name_input" class="form-label">أسم الموظف</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="user_name_input"
+                                            name="user_name_input"
+                                    />
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    ddd
+                                    <label for="national_id_input" class="form-label">الرقم القومي</label>
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            id="national_id_input"
+                                            name="national_id_input"
+                                    />
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    ddd
+                                    <div class="mb-3">
+                                        <label for="birthdate_input" class="form-label">تاريخ الميلاد</label>
+                                        <input type="text" class="form-control" placeholder="اختر تاريخ الميلاد"
+                                               id="birthdate_input" name="birthdate_input"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="role_choose_input" class="form-label">اختر الوظيفة</label>
+                                    <select id="role_choose_input"
+                                            name="role_choose_input"
+                                            class="select2 form-select form-select-lg" data-allow-clear="false">
+                                        <option disabled hidden selected value="">ابحث عن وظيفة...</option>
+                                        {% for role in roles %}
+
+                                            <option value="{{ role.id }}">{{ role.name }}</option>
+
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -39,4 +72,16 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+    <script>
+        $("#role_choose_input").select2();
+        $("#birthdate_input").datepicker();
+    </script>
 {% endblock %}
