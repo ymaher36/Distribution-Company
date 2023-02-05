@@ -12,9 +12,9 @@
             {% include 'human_resources/includes/navbar.html' with which_nav="user_details" is_add_user=True %}
 
             <div class="card mb-4">
-                <h5 class="card-header">ابحث عن موظف</h5>
+                <h5 class="card-header">إضافة موظف</h5>
                 <div class="card-body">
-                    <form action="{% url 'human_resources:users_details' %}" method="POST">
+                    <form class="mb-3" action="{% url 'human_resources:add_user' %}" method="POST">
                         {% csrf_token %}
 
                         <div class="row">
@@ -33,6 +33,7 @@
                                 <div class="mb-3">
                                     <label for="national_id_input" class="form-label">الرقم القومي</label>
                                     <input
+
                                             type="number"
                                             class="form-control"
                                             id="national_id_input"
@@ -42,32 +43,160 @@
                             </div>
                             <div class="col">
                                 <div class="mb-3">
-                                    <div class="mb-3">
-                                        <label for="birthdate_input" class="form-label">تاريخ الميلاد</label>
-                                        <input type="text" class="form-control" placeholder="اختر تاريخ الميلاد"
-                                               id="birthdate_input" name="birthdate_input"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
                                     <label for="role_choose_input" class="form-label">اختر الوظيفة</label>
                                     <select id="role_choose_input"
                                             name="role_choose_input"
                                             class="select2 form-select form-select-lg" data-allow-clear="false">
                                         <option disabled hidden selected value="">ابحث عن وظيفة...</option>
                                         {% for role in roles %}
-
                                             <option value="{{ role.id }}">{{ role.name }}</option>
-
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="user_phone_number_input">ادخل رقم هاتف
+                                        الموظف</label>
+                                    <input type="tel" id="user_phone_number_input" name="user_phone_number_input"
+                                           class="form-control bootstrap-maxlength-example"
+                                           placeholder="************01"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="birthdate_input" class="form-label">تاريخ الميلاد</label>
+                                    <input type="text" class="form-control" placeholder="اختر تاريخ الميلاد"
+                                           id="birthdate_input" name="birthdate_input"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="gender_choose_input" class="form-label">اختر النوع</label>
+                                    <select id="gender_choose_input"
+                                            name="gender_choose_input"
+                                            class="form-select " data-allow-clear="false">
+
+                                        <option value="ذكر">ذكر</option>
+                                        <option value="أنثي">أنثي</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+
+                                    <div class="col ">
+                                        <label for="address_choose_input" class="form-label">اختر العنوان</label>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <select class="form-select"
+                                                id="address_choose_input"
+                                                name="address_choose_input"
+                                                aria-label="Default select example">
+                                            <option disabled hidden selected>ابحث عن عنوان...</option>
+                                            {% for address in addresses %}
+                                                <option value={{ address.id }}>{{ address.district.governorate.name }}---{{ address.district.name_ar }}---{{ address.street }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <small class="text-muted">يجب عليك تسجيل العنوان مسبقًا في الإدارات
+                                            العناوين </small>
+                                        <br/>
+                                        <a class="ml-5" target="_blank"
+                                           href="{% url "locations:add_address" %}"><small>إلى
+                                            صفحة إضافة العناوين</small></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="start_work_date_input" class="form-label">تاريخ بداية العمل</label>
+                                    <input type="text" class="form-control" placeholder="اختر تاريخ بداية العمل"
+                                           id="start_work_date_input" name="start_work_date_input"/>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-5">إضافة</button>
                     </form>
+                    <div class="row">
+                        <hr>
+                        <h5 class="card-header">جدول بآخر 10 موظفين تم إضافتهم</h5>
+                        <div class="table-responsive text-nowrap" style="min-height: 400px">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>الأسم</th>
+                                    <th>الوظيفة</th>
+                                    <th>النوع</th>
+                                    <th>الرقم القومي</th>
+                                    <th>تاريخ الميلاد</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>العنوان</th>
+                                    <th>أجراءات</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in latest_users %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ user.name }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.role.name }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.gender }}</strong>
+                                        </td>
+
+                                        <td>
+                                            <strong>{{ user.national_id }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.birthdate }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.phone_numbers.0 }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ user.home_location.0 }}</strong>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                        data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        تعديل
+                                                    </a>
+                                                    <a class="dropdown-item"
+                                                       href="{% url "human_resources:delete_user" user.id %}">
+                                                        <i class="bx bx-trash me-1"></i>
+                                                        حذف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -82,6 +211,8 @@
     <script src="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
     <script>
         $("#role_choose_input").select2();
+        $("#address_choose_input").select2();
         $("#birthdate_input").datepicker();
+        $("#start_work_date_input").datepicker();
     </script>
 {% endblock %}

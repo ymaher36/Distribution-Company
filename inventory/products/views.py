@@ -77,7 +77,7 @@ def add_brand(request):
 
 
 def delete_brand(request, brand_id):
-    brand = Brand.objects.get(id=brand_id)
+    brand = Brand.objects.filter(id=brand_id).first()
     brand.delete()
     reverse_url = reverse("inventory:brands")
     return HttpResponseRedirect(reverse_url)

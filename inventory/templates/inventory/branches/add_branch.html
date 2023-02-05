@@ -78,6 +78,62 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-5">إضافة</button>
                     </form>
+{#                                            <div class="row">#}
+{#                                <div class="divider ">#}
+{#                                    <div class="divider-text"></div>#}
+{#                                </div>#}
+{#                                <h5 class="card-header">جدول المنتجات</h5>#}
+{#                                <div class="table-responsive text-nowrap" style="min-height: 400px">#}
+{#                                    <table class="table">#}
+{#                                        <thead>#}
+{#                                        <tr>#}
+{#                                            <th>الأسم</th>#}
+{#                                            <th>الماركة</th>#}
+{#                                            <th>النوع</th>#}
+{#                                            <th>أجراءات</th>#}
+{#                                        </tr>#}
+{#                                        </thead>#}
+{#                                        <tbody>#}
+{#                                        {% for product in products %}#}
+{#                                            <tr>#}
+{#                                                <td>#}
+{#                                                    <strong>{{ product.name }}</strong>#}
+{#                                                </td>#}
+{#                                                <td>#}
+{#                                                    <strong>{{ product.product_brand }}</strong>#}
+{#                                                </td>#}
+{#                                                <td>#}
+{#                                                    <strong>{{ product.product_category }}</strong>#}
+{#                                                </td>#}
+{##}
+{##}
+{#                                                <td>#}
+{#                                                    <div class="dropdown">#}
+{#                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"#}
+{#                                                                data-bs-toggle="dropdown">#}
+{#                                                            <i class="bx bx-dots-vertical-rounded"></i>#}
+{#                                                        </button>#}
+{#                                                        <div class="dropdown-menu">#}
+{#                                                            <a class="dropdown-item" href="javascript:void(0);">#}
+{#                                                                <i class="bx bx-edit-alt me-1"></i>#}
+{#                                                                تعديل#}
+{#                                                            </a>#}
+{#                                                            <a class="dropdown-item"#}
+{#                                                               href="{% url 'inventory:delete_product' product.id %}">#}
+{#                                                                <i class="bx bx-trash me-1"></i>#}
+{#                                                                حذف#}
+{#                                                            </a>#}
+{#                                                        </div>#}
+{#                                                    </div>#}
+{#                                                </td>#}
+{#                                            </tr>#}
+{#                                        {% endfor %}#}
+{#                                        </tbody>#}
+{#                                    </table>#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+
                 </div>
             </div>
         </div>

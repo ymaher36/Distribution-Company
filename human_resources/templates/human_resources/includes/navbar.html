@@ -17,11 +17,13 @@
                        href="{% url "human_resources:user_accounts" %}">حسابات الموظفين</a>
                     <a class="nav-item nav-link{% if is_add_user %} active {% endif %}"
                        href="{% url "human_resources:add_user" %}">إضافة موظف</a>
+                    <a class="nav-item nav-link{% if is_other_settings %} active {% endif %}"
+                       href="{% url "human_resources:other_settings" %}">إعدادات أخرى</a>
                 </div>
             </div>
         {% endif %}
         {% if which_nav == "branches" %}
-        <div class="collapse navbar-collapse" id="navbar-ex-3">
+            <div class="collapse navbar-collapse" id="navbar-ex-3">
                 <div class="navbar-nav ml-auto">
                     <a class="nav-item nav-link  {% if is_branch_settings %} active {% endif %}"
                        href="{% url "inventory:branches_settings" %}">إعدادات الافرع</a>
@@ -31,8 +33,8 @@
                        href="{% url "inventory:add_user_to_branch" %}">موظفين الافرع</a>
                 </div>
             </div>
-        {% endif %} 
+        {% endif %}
     </div>
 </nav>
-{% include 'human_resources/includes/navribbon.html'  %}
+{% include 'human_resources/includes/navribbon.html' %}
 
