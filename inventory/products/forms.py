@@ -25,6 +25,11 @@ class AddProductForm(forms.Form):
     )
 
 
+class AddEmployeesToBranch(forms.Form):
+    branch_name_choose_input2 = forms.CharField()
+    employee_name_choose_input = forms.CharField()
+
+
 class SearchProductForm(forms.Form):
     product_search_name_input = forms.CharField()
     brand_search_choose_input = forms.CharField()

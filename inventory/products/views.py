@@ -10,18 +10,20 @@ def search_products(request):
     brands = Brand.objects.all()
     categories = ProductCategory.objects.all()
     products = Product.objects.all().order_by("-created_at")
-    context = {
-        'brands': brands,
-        'products': products,
-        'categories': categories
-    }
-    if request.method == "GET":
+
+    if request.GET:
         form = SearchProductForm(request.GET)
         if form.is_valid():
             product_name = form.cleaned_data['product_search_name_input']
             brand = form.cleaned_data['product_search_name_input']
             product_name = form.cleaned_data['product_search_name_input']
+            # products = products.
+    context = {
+        'brands': brands,
+        'products': products,
+        'categories': categories,
 
+    }
     return render(request, 'inventory/products/products.html', context)
 
 
@@ -34,10 +36,10 @@ def add_products(request):
         form = AddProductForm(request.POST)
         if form.is_valid():
             product_name = form.cleaned_data['product_name_input']
-            category = ProductCategory.objects.filter(pk=form.cleaned_data['category_choose_input']).first()
-            brand = Brand.objects.filter(name=form.cleaned_data['brand_choose_input']).first()
-            product = Product(product_category=category,
-                              product_brand=brand,
+            category_id = pk = form.cleaned_data['category_choose_input']
+            brand_id = form.cleaned_data['brand_choose_input']
+            product = Product(category_id=category_id,
+                              brand_id=brand_id,
                               name=product_name)
             product.save()
     context = {

@@ -3,6 +3,7 @@
 {% block title %}
     إضافة موظف
 {% endblock %}
+
 {% block body %}
     <div class="content-wrapper">
         <!-- Content -->
@@ -102,7 +103,7 @@
                                                 aria-label="Default select example">
                                             <option disabled hidden selected>ابحث عن عنوان...</option>
                                             {% for address in addresses %}
-                                                <option value={{ address.id }}>{{ address.district.governorate.name }}---{{ address.district.name_ar }}---{{ address.street }}</option>
+                                                <option value={{ address.id }}>{{ address }}</option>
 
                                             {% endfor %}
 
@@ -131,7 +132,7 @@
                     <div class="row">
                         <hr>
                         <h5 class="card-header">جدول بآخر 10 موظفين تم إضافتهم</h5>
-                        <div class="table-responsive text-nowrap" style="min-height: 400px">
+                        <div class="table-responsive text-nowrap mini-table-container">
                             <table class="table">
                                 <thead>
                                 <tr>

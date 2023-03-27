@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    إضافة مورد
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'purchases/includes/navbar.html' with which_nav="suppliers" is_add_supplier=True %}
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">إضافة مورد جديد</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{% url "purchases:add_supplier" %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="supplier_name_input" class="form-label">أسم المورد</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id=supplier_name_input"
+                                            name="supplier_name_input"
+                                            required
+                                    />
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="branch_name_choose_input" class="form-label">اختر الفرع</label>
+                                    <select class="form-select"
+                                            id="branch_name_choose_input"
+                                            name="branch_name_choose_input"
+                                            aria-label="Default select example required">
+                                        <option disabled hidden selected>قائمة الأفرع</option>
+                                        {% for branch in branches %}
+                                            <option value="{{ branch.id }}">{{ branch.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="supplier_type_choose_input" class="form-label">اختر نوع المورد</label>
+                                    <select class="form-select"
+                                            id="supplier_type_choose_input"
+                                            name="supplier_type_choose_input"
+                                            aria-label="Default select example">
+                                        <option disabled hidden selected>قائمة الأنواع</option>
+                                        {% for type in types %}
+                                            <option value="{{ type.id }}">{{ type.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+
+                                    <div class="col ">
+                                        <label for="address_choose_input" class="form-label">اختر العنوان</label>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <select class="form-select"
+                                                id="address_choose_input"
+                                                name="address_choose_input"
+                                                aria-label="Default select example">
+                                            <option disabled hidden selected>ابحث عن عنوان...</option>
+                                            {% for address in addresses %}
+                                                <option value={{ address.id }}>{{ address }}</option>
+
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <small class="text-muted">يجب عليك تسجيل العنوان مسبقًا في الإدارات
+                                            العناوين </small>
+                                        <br/>
+                                        <a class="ml-5" target="_blank"
+                                           href="{% url "locations:add_address" %}"><small>إلى
+                                            صفحة إضافة العناوين</small></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row" id="address_table_row">
+                            <h5 class="card-header">تفاصيل العنوان المختار</h5>
+
+                            <div class="table-responsive">
+                                <table class="table table-light" id="address_table">
+                                    <thead>
+                                    <tr>
+                                        <th>المحافظة</th>
+                                        <th>المنطقة</th>
+                                        <th>الشارع</th>
+                                        <th>معلومات اضافية</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="address_table_body">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary m-2">إضافة</button>
+
+                    </form>
+                    <div class="row">
+                        <hr>
+                        <h5 class="card-header">جدول بآخر 10 موردين تم إضافتهم</h5>
+                        <div class="table-responsive text-nowrap mini-table-container">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>الأسم</th>
+                                    <th>الفرع</th>
+                                    <th>النوع</th>
+                                    <th>العنوان</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for supplier in latest_suppliers %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ supplier.name }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ supplier.branch.name }}</strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ supplier.type.name }}</strong>
+                                        </td>
+
+                                        <td>
+                                            <strong>{{ supplier.location.first }}</strong>
+                                        </td>
+
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                        data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        تعديل
+                                                    </a>
+                                                    <a class="dropdown-item"
+                                                       href="javascript:void(0);">
+                                                        <i class="bx bx-trash me-1"></i>
+                                                        حذف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script>
+        const address_choose_input = $('#address_choose_input')
+        const address_table_row = $('#address_table_row')
+        const address_table = $('#address_table')
+        const address_table_body = $('#address_table_body')
+
+        address_choose_input.select2();
+        $("#branch_name_choose_input").select2();
+        $("#supplier_type_choose_input").select2();
+
+
+        address_table_row.hide()
+
+        address_choose_input.on('change', async (e) => {
+            const address_value = e.target.value
+            try {
+                const response = await fetch(`/locations/address/get-address-data?address_id=${address_value}`)
+                const data = await response.json();
+                address_table_body.append(`<tr><td>${data.governorate}</td><td>${data.district}</td><td>${data.street}</td><td>${data.other}</td></tr>`)
+                address_table_row.show()
+
+            } catch (e) {
+                console.error(e)
+            }
+        })
+
+    </script>
+{% endblock %}

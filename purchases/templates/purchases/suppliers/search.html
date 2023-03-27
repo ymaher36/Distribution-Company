@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    الموردين
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'purchases/includes/navbar.html' with which_nav="suppliers" is_search_supplier=True %}
+
+            <div class="card mb-4">
+                <div class="card-header col">
+                    <div class="row mb-4">
+                        <h5 class="mb-0">ابحث عن مورد</h5>
+                    </div>
+                    <div class="row my-4">
+                        <small class="text-muted">يمكنك البحث باستخدام خانة واحدة أو اكثر</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="#" method="GET">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="product_name_input" class="form-label">أسم المنتج</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="product_name_input"
+                                            name="product_name_input"
+                                    />
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

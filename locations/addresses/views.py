@@ -47,3 +47,15 @@ def delete_address(request, location_id):
     location.delete()
     reverse_url = reverse('locations:add_address')
     return HttpResponseRedirect(reverse_url)
+
+
+def get_address_data(request):
+    address_id = request.GET.get('address_id')
+    address = Location.objects.filter(id=address_id).first()
+    response_data = {
+        'governorate': address.district.governorate.name,
+        'district': address.district.name_ar,
+        'street': address.street,
+        'other': address.other
+    }
+    return JsonResponse(response_data, safe=False)

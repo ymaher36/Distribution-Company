@@ -3,6 +3,9 @@
 {% block title %}
     إضافة موظف
 {% endblock %}
+{% block styles %}
+
+{% endblock %}
 {% block body %}
     <div class="content-wrapper">
         <!-- Content -->
@@ -33,7 +36,7 @@
                             </form>
                             <hr>
                             <h5 class="card-header">جدول كل الوظائف</h5>
-                            <div class="table-responsive text-nowrap">
+                            <div class="table-responsive text-nowrap mini-table-container">
                                 <table class="table">
                                     <caption class="ms-4">
                                         عدد الوظائف: {{ roles|length }}

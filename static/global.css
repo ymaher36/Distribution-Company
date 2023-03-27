@@ -1,6 +1,9 @@
 *{
     font-family: 'Cairo', sans-serif;
 }
+.mini-table-container{
+    min-height: 200px;
+}
 
 .profile-dropdown.dropdown-menu {
     right: -55px

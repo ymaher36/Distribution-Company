@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+from inventory.branches.models import Branch
 from locations.addresses.models import Location
 
 
@@ -25,6 +26,7 @@ class User(models.Model):
     birthdate = models.DateField(null=True)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
     home_location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True)
     phone_numbers = models.ForeignKey(PhoneNumber, on_delete=models.CASCADE, null=True)
     created_at = models.DateField(auto_now_add=True, blank=True)
 

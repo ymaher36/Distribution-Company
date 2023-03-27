@@ -151,7 +151,7 @@
             governorate_choose_input.on('change', async (e) => {
                 const governorate_value = e.target.value
                 try {
-                    const response = await fetch(`/address/get_district_related_to_governorate?governorate_id=${governorate_value}`)
+                    const response = await fetch(`/locations/address/get-district-related-to-governorate?governorate_id=${governorate_value}`)
                     const data = await response.json();
                     district_choose_input.empty()
                     data.forEach(elem => {

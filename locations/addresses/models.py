@@ -21,4 +21,6 @@ class Location(models.Model):
     street = models.CharField(max_length=50)
     district = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
     other = models.CharField(max_length=500)
-    # lat_lng
+
+    def __str__(self):
+        return self.street + " -- " + self.district.name_ar + " -- " + self.district.governorate.name

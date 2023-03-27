@@ -3,6 +3,10 @@
 {% block title %}
     المنتجات
 {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/flatpickr/flatpickr.css' %}">
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
 {% block body %}
     <div class="content-wrapper">
         <!-- Content -->
@@ -25,7 +29,7 @@
                             <form action="{% url 'inventory:search_products' %}" method="GET">
                                 <div class="row">
                                     <div class="mb-3 col">
-                                        <label class="form-label" for="basic-product_search_name_input-fullname">اسم
+                                        <label class="form-label" for="product_search_name_input">اسم
                                             المنتج</label>
                                         <input type="text" class="form-control" id="product_search_name_input"
                                                name="product_search_name_input">
@@ -56,12 +60,12 @@
 
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">بحث</button>
+                                <button type="submit" class="btn btn-primary m-2">بحث</button>
                             </form>
                             <div class="row">
                                 <hr>
                                 <h5 class="card-header">جدول المنتجات</h5>
-                                <div class="table-responsive text-nowrap" style="min-height: 400px">
+                                <div class="table-responsive text-nowrap mini-table-container">
                                     <table class="table">
                                         <thead>
                                         <tr>
@@ -78,10 +82,10 @@
                                                     <strong>{{ product.name }}</strong>
                                                 </td>
                                                 <td>
-                                                    <strong>{{ product.product_brand }}</strong>
+                                                    <strong>{{ product.brand }}</strong>
                                                 </td>
                                                 <td>
-                                                    <strong>{{ product.product_category }}</strong>
+                                                    <strong>{{ product.category }}</strong>
                                                 </td>
 
 
@@ -125,10 +129,7 @@
     </div>
 
 {% endblock %}
-{% block styles %}
-    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/flatpickr/flatpickr.css' %}">
-    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
-{% endblock %}
+
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/flatpickr/flatpickr.js' %}"></script>
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>

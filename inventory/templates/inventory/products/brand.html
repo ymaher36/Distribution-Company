@@ -26,7 +26,7 @@
                             </form>
                             <hr>
                             <h5 class="card-header">جدول كل المركات</h5>
-                            <div class="table-responsive text-nowrap">
+                            <div class="table-responsive text-nowrap mini-table-container">
                                 <table class="table">
                                     <caption class="ms-4">
                                         عدد البرندات: {{ brands|length }}
@@ -88,7 +88,7 @@
                             </form>
                             <hr>
                             <h5 class="card-header">جدول كل الأنواع</h5>
-                            <div class="table-responsive text-nowrap">
+                            <div class="table-responsive text-nowrap mini-table-container">
                                 <table class="table">
                                     <caption class="ms-4">
                                         عدد الأنواع: {{ cateories|length }}
@@ -142,7 +142,6 @@
     <!-- / Content -->
 
     <div class="content-backdrop fade"></div>
-    </div>
 
 {% endblock %}
 {% block scripts %}

@@ -5,7 +5,7 @@ from django.db import models
 from human_resources.user_details.models import User
 from inventory.branches.models import Branch
 from locations.addresses.models import Location
-from purchases.models import PurchaseProduct
+from purchases.purchase_invoices.models import PurchaseProduct
 
 
 # Create your models here.

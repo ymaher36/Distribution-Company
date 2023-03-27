@@ -3,6 +3,9 @@
 {% block title %}
     إضافة منتجات
 {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
 {% block body %}
     <div class="content-wrapper">
         <!-- Content -->
@@ -72,7 +75,7 @@
                     <div class="row">
                         <hr>
                         <h5 class="card-header">جدول بآخر 10 منتجات تمت إضافتها</h5>
-                        <div class="table-responsive text-nowrap">
+                        <div class="table-responsive text-nowrap mini-table-container">
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -89,10 +92,10 @@
                                             <strong>{{ product.name }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ product.product_brand }}</strong>
+                                            <strong>{{ product.brand }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ product.product_category }}</strong>
+                                            <strong>{{ product.category }}</strong>
                                         </td>
                                         <td>
                                             <div class="dropdown">
@@ -133,9 +136,7 @@
     </div>
 
 {% endblock %}
-{% block styles %}
-    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
-{% endblock %}
+
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
     <script>
