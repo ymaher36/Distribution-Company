@@ -29,7 +29,7 @@
                     <a class="nav-item nav-link{% if is_add_purchase_invoice %} active {% endif %}"
                        href="{% url 'purchases:add_purchase_invoice' %}">إضافة فاتورة</a>
                     <a class="nav-item nav-link{% if is_others_purchase_invoice %} active {% endif %}"
-                       href="#">اخرى</a>
+                       href="{% url 'purchases:purchase_invoice_others' %}">اخرى</a>
                 </div>
             </div>
         {% endif %}

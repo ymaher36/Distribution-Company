@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -54,7 +54,6 @@ def add_type(request):
     if request.POST:
         form = AddSupplierType(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             supplier_type_name = form.cleaned_data.get('supplier_type_name_input')
             supplier_type = SupplierType(
                 name=supplier_type_name
@@ -62,3 +61,15 @@ def add_type(request):
             supplier_type.save()
     redirect_url = reverse('purchases:supplier_others')
     return HttpResponseRedirect(redirect_url)
+
+
+def get_branch_suppliers(request):
+    select2_data_list = []
+    branch_id = request.GET.get('branch_id')
+    suppliers = Supplier.objects.filter(branch_id=branch_id)
+    for supplier in suppliers:
+        select2_data_list.append({
+            'id': supplier.id,
+            'name': supplier.type.name + " -- " + supplier.name,
+        })
+    return JsonResponse(select2_data_list, safe=False)

@@ -5,6 +5,8 @@
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+
 {% endblock %}
 {% block body %}
     <div class="content-wrapper">
@@ -18,10 +20,10 @@
                     <h5 class="mb-0">إضافة فاتورة شـــــــراء جديد</h5>
                 </div>
                 <div class="card-body">
-                    <form action="#" method="POST">
-                        {% csrf_token %}
+                    <form action="{% url 'purchases:add_purchase_invoice' %}" id="invoice_product_form"
+                          class="form-repeater" method="POST">                        {% csrf_token %}
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-lg-6 col-xl-3 col-12">
                                 <div class="mb-3">
                                     <label for="branch_name_choose_input" class="form-label">اختر الفرع</label>
                                     <select class="form-select"
@@ -35,7 +37,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-xl-6 col-12">
                                 <div class="mb-3">
                                     <label for="supplier_choose_input" class="form-label">اختر المورد</label>
                                     <select class="form-select"
@@ -47,7 +49,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-lg-6 col-xl-3 col-12">
                                 <div class="mb-3">
                                     <label for="purchase_channel_choose_input" class="form-label">اختر قناة
                                         التوزيع</label>
@@ -56,13 +58,89 @@
                                             name="purchase_channel_choose_input"
                                             aria-label="Default select example required">
                                         <option disabled hidden selected>قائمة قنوات التوزيع</option>
-                                        {% for channel in  channels %}
+                                        {% for channel in  purchase_channel %}
                                             <option value="{{ channel.id }}">{{ channel.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
+
                         </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-xl-3 col-12">
+                                <div class="mb-3">
+                                    <label for="receiving_date_input" class="form-label">تاريخ الاستلام</label>
+                                    <input type="text" class="form-control expire_date-select"
+                                           placeholder="اختر تاريخ الاستلام"
+                                           id="receiving_date_input" name="receiving_date_input"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xl-9 col-12">
+                                <div class="mb-3">
+                                    <label for="note_input" class="form-label">الملحوظات</label>
+                                    <textarea class="form-control" id="note_input" name="note_input"
+                                              rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>إضافة المنتجات للفاتورة</h4>
+
+                        <div data-repeater-list>
+                            <div data-repeater-item>
+                                <div class="row">
+
+                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+
+                                        <label for="product_choose_input-1" class="form-label product-label">اختر
+                                            المنتج</label>
+                                        <select class="form-select product-select"
+                                                id="product_choose_input-1"
+                                                name="product_choose_input-1"
+                                                aria-label="Default select example required">
+                                            <option disabled hidden selected>قائمة المنتجات</option>
+                                            {% for product in  products %}
+                                                <option value="{{ product.id }}">{{ product.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col-lg-6 col-xl-3 col-12 mb-0">
+                                        <label for="expire_date_input-1" class="form-label expire_date-label">تاريخ
+                                            انتهاء
+                                            الصلاحية</label>
+                                        <input type="text" class="form-control expire_date-select"
+                                               placeholder="اختر تاريخ انتهاء الصلاحية"
+                                               id="expire_date_input-1" name="expire_date_input-1"/>
+                                    </div>
+                                    <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                        <label class="form-label price-label" for="price-1">السعر</label>
+                                        <input type="number" id="price-1" name="price-1"
+                                               class="form-control price-select"/>
+                                    </div>
+
+                                    <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                        <label class="form-label quantity-label" for="quantity-1">الكمية</label>
+                                        <input type="number" id="quantity-1" name="quantity-1"
+                                               class="form-control quantity-select"/>
+                                    </div>
+                                    <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                        <button class="btn btn-label-danger mt-4" data-repeater-delete type="button">
+                                            <i class="bx bx-x me-1"></i>
+                                            <span class="align-middle">Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-2 row justify-content-end">
+                            <div class="col-4">
+                                <button class="btn btn-primary" data-repeater-create type="button">
+                                    <i class="bx bx-plus me-1"></i>
+                                    <span class="align-middle">إضافة منتج</span>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary m-2">حفظ الفاتورة</button>
                     </form>
                 </div>
             </div>
@@ -71,14 +149,87 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
     <script>
+
         const branch_name_choose_input = $('#branch_name_choose_input')
         const supplier_choose_input = $('#supplier_choose_input')
         const purchase_channel_choose_input = $('#purchase_channel_choose_input')
+        const receiving_date_input = $('#receiving_date_input')
+        const quantity_1 = $('#quantity-1')
+        const price_1 = $('#price-1')
+
+        let invoice_product_form = $("#invoice_product_form");
+        let invoice_form = $("#invoice_form");
+
+        let row = 2;
+
         branch_name_choose_input.select2();
         supplier_choose_input.select2();
         purchase_channel_choose_input.select2();
+        receiving_date_input.datepicker();
 
-        supplier_choose_input.prop("disabled", true)
+        supplier_choose_input.prop("disabled", true);
+        branch_name_choose_input.on('change', async (e) => {
+                const branch_value = e.target.value;
+                try {
+
+
+                    const response = await fetch(`/purchases/suppliers/get-branch-suppliers?branch_id=${branch_value}`);
+                    const data = await response.json();
+                    supplier_choose_input.empty()
+                    data.forEach(elem => {
+                        supplier_choose_input.append(new Option(elem.name, elem.id, false, false))
+                    })
+                    supplier_choose_input.attr('disabled', false)
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+        )
+
+        invoice_product_form.repeater({
+            show: function () {
+                let product_select = $(this).find('.product-select');
+                let product_label = $(this).find('.product-label');
+                let price_select = $(this).find('.price-select');
+                let price_label = $(this).find('.price-label');
+                let expire_date_select = $(this).find('.expire_date-select');
+                let expire_date_label = $(this).find('.expire_date-label');
+                let quantity_select = $(this).find('.quantity-select');
+                let quantity_label = $(this).find('.quantity-label');
+
+
+                product_select.attr('id', 'product_choose_input-' + row)
+                product_select.attr('name', 'product_choose_input-' + row)
+                product_label.attr('for', 'product_choose_input-' + row)
+                price_select.attr('id', 'price-' + row)
+                price_select.attr('name', 'price-' + row)
+                price_label.attr('for', 'price-' + row)
+                expire_date_select.attr('id', 'expire_date_input-' + row)
+                expire_date_select.attr('name', 'expire_date_input-' + row)
+                expire_date_label.attr('for', 'expire_date_input-' + row)
+                quantity_select.attr('id', 'quantity-' + row)
+                quantity_select.attr('name', 'quantity-' + row)
+                quantity_label.attr('for', 'quantity-' + row)
+
+
+                row++;
+                $(this).slideDown();
+                $('.product-select').select2();
+                $('.expire_date-select').datepicker();
+                {#console.log($(this).find('.select2-container'))#}
+            },
+            hide: function (e) {
+                confirm('هل أنت متأكد أنك تريد الحذف؟') && $(this).slideUp(e);
+            }, ready: function () {
+                $('.product-select').select2();
+                $('.expire_date-select').datepicker();
+
+            }
+        });
+
+
     </script>
 {% endblock %}
