@@ -1,8 +1,11 @@
 from django.urls import path
 
-from sales.sale_invoices import views
+from sales.customers import views
 
 urlpatterns = [
-    path('', views.search_sale_invoice, name='search_sale_invoice'),
-    path('add-sale-invoice/', views.add_sale_invoice, name='add_sale_invoice'),
+    path('', views.search_customer, name='search_customer'),
+    path('add-customer/', views.add_customer, name='add_customer'),
+    path('customer-others/', views.customer_others, name='customer_others'),
+    path("add-customer-type/", views.add_type, name='add_type'),
+
 ]

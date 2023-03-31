@@ -13,12 +13,12 @@ from purchases.purchase_invoices.models import PurchaseProduct
 
 class SellingChannel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
 
 
 class CustomerType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
 
 
 class Customer(models.Model):
@@ -27,6 +27,7 @@ class Customer(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     location = models.ManyToManyField(Location)
     type = models.ForeignKey(CustomerType, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 
 class Order(models.Model):
@@ -44,7 +45,7 @@ class Order(models.Model):
     state = models.CharField(max_length=20, null=False, blank=False, default='pending')
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="create_user")
-    delivered_by = models.ForeignKey(User, on_delete=models.CASCADE,null=True, related_name="deliver_user")
+    delivered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="deliver_user")
 
 
 class OrderProducts(models.Model):

@@ -15,7 +15,8 @@ class AddPurchaseForm(forms.Form):
         required=False
     )
     receiving_date_input = forms.DateField(
-        required=True
+        required=True,
+        input_formats=['%Y-%m-%d'],
     )
 
 
@@ -30,7 +31,8 @@ class AddPurchaseProductForm(forms.Form):
         required=True
     )
     expire_date_input = forms.DateField(
-        required=True
+        required=True,
+        input_formats=['%Y-%m-%d'],
     )
 
 

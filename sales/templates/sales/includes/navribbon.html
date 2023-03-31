@@ -1,18 +1,20 @@
-{% if which_nav == 'suppliers' %}
-    {% if is_search_supplier %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> قائمة الموردين</h4>
-    {% elif is_add_supplier %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> إضافة مورد</h4>
-    {% elif is_others_supplier %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> اخرى</h4>
+{% if which_nav == 'customers' %}
+    {% if is_search_customers %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">العملاء/ </span> قائمة العملاء</h4>
+    {% elif is_add_customer %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">العملاء/ </span> إضافة عميل</h4>
+    {% elif is_others_customers %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">العملاء/ </span> اخرى</h4>
     {% endif %}
 {% endif %}
-{% if which_nav == 'purchase_invoices' %}
-    {% if is_search_purchase_invoice %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> قائمة الفواتير</h4>
-    {% elif is_add_purchase_invoice %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> إضافة فاتورة</h4>
-    {% elif is_others_purchase_invoice %}
-        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> اخرى</h4>
+{% if which_nav == 'sales_invoices' %}
+    {% if is_search_sale_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير البيــــــع/ </span> قائمة الفواتير</h4>
+    {% elif is_add_sale_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير البيــــــع/ </span> إضافة فاتورة</h4>
+    {% elif is_edit_price_list %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير البيــــــع/ </span> تعديل قائمة الأسعار</h4>
+    {% elif is_others_sale_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير البيــــــع/ </span> اخرى</h4>
     {% endif %}
 {% endif %}

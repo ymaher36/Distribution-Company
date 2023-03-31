@@ -1,11 +1,13 @@
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from psycopg2 import DatabaseError
 
 from inventory.branches.models import Branch
 from inventory.products.models import Product
 from purchases.purchase_invoices.forms import AddPurchaseChannel, AddPurchaseForm
-from purchases.purchase_invoices.models import PurchasingChannel, Purchase
+from purchases.purchase_invoices.models import PurchasingChannel, Purchase, PurchaseProduct
 
 
 def search_purchase_invoice(request):
@@ -51,15 +53,30 @@ def add_purchase_invoice(request):
                 amount_of_boxes=total_amount_boxes,
                 amount_of_brands=0,
                 amount_of_types=0,
-                type="cash"
+                type="purchase"
             )
-            purchase_invoice.save()
-
-            print(purchase_invoice)
-            print(invoice_form.cleaned_data)
-            print(products_form_values)
-            print(products_dict)
-
+            try:
+                with transaction.atomic():
+                    purchase_invoice.save()
+                    for product in products_dict.values():
+                        product_id = product[0]
+                        expire_date = product[1]
+                        price = product[2]
+                        quantity = product[3]
+                        purchase_product = PurchaseProduct(
+                            purchase_id=purchase_invoice.id,
+                            product_id=product_id,
+                            expire_date=expire_date,
+                            price=price,
+                            quantity=quantity
+                        )
+                        purchase_product.save()
+            except DatabaseError as e:
+                print(e)
+        elif invoice_form.errors:
+            print(invoice_form.errors)
+        else:
+            print("Error")
     context = {
         'branches': branches,
         'products': products,
