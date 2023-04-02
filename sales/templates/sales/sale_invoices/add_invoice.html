@@ -1,1 +1,40 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    إضافة فاتورة بيـــــــــع
+{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'sales/includes/navbar.html' with which_nav="sales_invoices" is_add_sale_invoice=True %}
+            <div class="card mb-4">
+                <div class="card-header col">
+                        <h5 class="mb-0">إضافة فاتورة بيـــــــــع جديد</h5>
+                </div>
+                <div class="card-body">
+                    <form action="#" method="GET">
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="product_name_input" class="form-label">أسم المنتج</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="product_name_input"
+                                            name="product_name_input"
+                                    />
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

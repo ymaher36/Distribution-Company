@@ -43,7 +43,6 @@ class Order(models.Model):
     amount_of_brands = models.IntegerField(null=True)
     note = models.CharField(max_length=400, null=True)
     state = models.CharField(max_length=20, null=False, blank=False, default='pending')
-
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="create_user")
     delivered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="deliver_user")
 

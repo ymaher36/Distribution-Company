@@ -34,3 +34,4 @@ class PurchaseProduct(models.Model):
     price = models.FloatField(null=True)
     expire_date = models.DateField(null=True)
     quantity = models.IntegerField(null=True)
+    sold_amount = models.IntegerField(default=0)

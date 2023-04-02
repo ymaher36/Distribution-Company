@@ -25,13 +25,13 @@
             <div class="collapse navbar-collapse" id="navbar-ex-3">
                 <div class="navbar-nav ml-auto">
                     <a class="nav-item nav-link  {% if is_search_sale_invoice %} active {% endif %}"
-                       href="#">قائمة الفواتير</a>
+                       href="{% url 'sales:search_sale_invoice' %}">قائمة الفواتير</a>
                     <a class="nav-item nav-link{% if is_add_sale_invoice %} active {% endif %}"
-                       href="#">إضافة فاتورة</a>
-                    <a class="nav-item nav-link{% if is_edit_price_list %} active {% endif %}"
-                       href="#">تعديل قائمة الأسعار</a>
+                       href="{% url 'sales:add_sale_invoice' %}">إضافة فاتورة</a>
+                    <a class="nav-item nav-link{% if is_price_list %} active {% endif %}"
+                       href="{% url 'sales:price_list' %}">قائمة الأسعار</a>
                     <a class="nav-item nav-link{% if is_others_sale_invoice %} active {% endif %}"
-                       href="#">اخرى</a>
+                       href="{% url 'sales:sale_invoice_others' %}">اخرى</a>
                 </div>
             </div>
         {% endif %}
