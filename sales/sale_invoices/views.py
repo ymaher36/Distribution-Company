@@ -7,8 +7,8 @@ from django.db.models import F
 
 from inventory.branches.models import Branch
 from purchases.purchase_invoices.models import PurchaseProduct
-from sales.models import SellingChannel, PricingList
 from sales.sale_invoices.forms import AddSaleChannel, EditPriceListForm
+from sales.sale_invoices.models import PricingList, SellingChannel
 
 
 def search_sale_invoice(request):

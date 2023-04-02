@@ -5,7 +5,7 @@ from django.urls import reverse
 from inventory.branches.models import Branch
 from locations.addresses.models import Location
 from sales.customers.forms import AddCustomerType, AddCustomer
-from sales.models import CustomerType, Customer
+from sales.customers.models import CustomerType, Customer
 
 
 def search_customer(request):
