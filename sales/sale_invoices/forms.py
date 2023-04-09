@@ -2,6 +2,31 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 
+class GetBranchForm(forms.Form):
+    branch_choose_input = forms.CharField(
+        required=True
+    )
+
+
+class AddSaleForm(forms.Form):
+    branch_name_input = forms.CharField(
+        required=True
+    )
+    customer_choose_input = forms.CharField(
+        required=True
+    )
+    sale_channel_choose_input = forms.CharField(
+        required=True
+    )
+    created_by_employee_choose_input = forms.CharField(
+        required=True
+    )
+    receiving_date_input = forms.DateField(
+        required=True,
+        input_formats=['%Y-%m-%d'],
+    )
+
+
 class CustomMultipleChoiceField(forms.MultipleChoiceField):
     """This field is a MultipleChoiceField designed to override the validation method of a default MultipleChoiceField"""
 

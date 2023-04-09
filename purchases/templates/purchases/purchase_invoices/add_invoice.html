@@ -168,7 +168,9 @@
         branch_name_choose_input.select2();
         supplier_choose_input.select2();
         purchase_channel_choose_input.select2();
-        receiving_date_input.datepicker({format: "yyyy-mm-dd"});
+        receiving_date_input.datepicker({
+                    format:"yyyy-mm-dd",
+                }).datepicker("setDate",'now');
 
         supplier_choose_input.prop("disabled", true);
         branch_name_choose_input.on('change', async (e) => {

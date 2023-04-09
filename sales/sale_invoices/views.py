@@ -1,13 +1,16 @@
 import datetime
 
+from django.db.models.functions import Coalesce
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.db.models import F
+from django.db.models import F, Subquery, OuterRef
 
+from human_resources.user_details.models import User
 from inventory.branches.models import Branch
 from purchases.purchase_invoices.models import PurchaseProduct
-from sales.sale_invoices.forms import AddSaleChannel, EditPriceListForm
+from sales.customers.models import Customer
+from sales.sale_invoices.forms import AddSaleChannel, EditPriceListForm, GetBranchForm, AddSaleForm
 from sales.sale_invoices.models import PricingList, SellingChannel
 
 
@@ -17,7 +20,35 @@ def search_sale_invoice(request):
 
 
 def add_sale_invoice(request):
-    context = {}
+    branches = Branch.objects.all()
+    context = {
+        'branches': branches,
+    }
+    if request.GET:
+        get_branch_form = GetBranchForm(request.GET)
+        if get_branch_form.is_valid():
+            branch_id = get_branch_form.cleaned_data.get('branch_choose_input')
+            branch = branches.filter(id=branch_id).first()
+            customers = Customer.objects.filter(branch_id=branch_id)
+            sale_channels = SellingChannel.objects.all()
+            employees = User.objects.filter(branch_id=branch_id)
+            products = PurchaseProduct.objects.filter(purchase__branch_id=branch_id,
+                                                      sold_amount__lt=F('quantity')).annotate(
+                selling_price=Subquery(
+                    PricingList.objects.filter(product_id=OuterRef('id'), end_date__isnull=True).values(
+                        'selling_price')[:1]))
+            context["products"] = products
+            context["branch"] = branch
+            context["customers"] = customers
+            context["sale_channels"] = sale_channels
+            context["employees"] = employees
+        else:
+            print(get_branch_form.errors)
+    elif request.POST:
+        add_sale_form = AddSaleForm(request.POST)
+        if add_sale_form.is_valid():
+            print(add_sale_form.cleaned_data)
+
     return render(request, 'sales/sale_invoices/add_invoice.html', context)
 
 
@@ -57,11 +88,9 @@ def get_price_list_by_branch(request):
         products = PricingList.objects.filter(end_date__isnull=True, product__purchase__branch_id=branch_id).order_by(
             'product__product')
     for product in products:
-        print(product)
         table_data_list.append(
             {'product_name': product.product.product.name, 'expire_date': product.product.expire_date,
              'price': product.selling_price})
-    print(table_data_list)
 
     return JsonResponse(table_data_list, safe=False)
 

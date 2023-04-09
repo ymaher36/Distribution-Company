@@ -4,6 +4,8 @@
     إضافة فاتورة بيـــــــــع
 {% endblock %}
 {% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css' %}">
 {% endblock %}
 {% block body %}
     <div class="content-wrapper">
@@ -13,28 +15,145 @@
             {% include 'sales/includes/navbar.html' with which_nav="sales_invoices" is_add_sale_invoice=True %}
             <div class="card mb-4">
                 <div class="card-header col">
-                        <h5 class="mb-0">إضافة فاتورة بيـــــــــع جديد</h5>
+                    <h5 class="mb-0">اختر الفرع لفاتورة البيـــــــــع</h5>
                 </div>
                 <div class="card-body">
-                    <form action="#" method="GET">
-
+                    <form id="get_branch" action="{% url 'sales:add_sale_invoice' %}" method="GET">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-lg-6 col-xl-6 col-12">
                                 <div class="mb-3">
-                                    <label for="product_name_input" class="form-label">أسم المنتج</label>
-                                    <input
-                                            type="text"
-                                            class="form-control"
-                                            id="product_name_input"
-                                            name="product_name_input"
-                                    />
+                                    <select class="form-select"
+                                            id="branch_choose_input"
+                                            name="branch_choose_input"
+                                            aria-label="Default select example required">
+                                        <option disabled hidden selected value="">ابحث عن فرع...</option>
+                                        {% for branch in branches %}
+                                            <option value="{{ branch.id }}">
+                                                {{ branch.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+            {% if products %}
+                <div class="card mb-4">
+                    <div class="card-header col">
+                        <h5 class="mb-0">إضافة فاتورة بيـــــــــع جديدة ( {{ branch.name }} )</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="get_branch" action="{% url 'sales:add_sale_invoice' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+
+                                <div class="col-lg-6 col-xl-6 col-12">
+                                    <div class="row">
+                                        <input type="hidden" class="form-control"
+                                               id="branch_name_input"
+                                               name="branch_name_input"
+                                               value="{{ branch.name }}">
+                                        <div class="col-lg-6 col-xl-6 col-12">
+                                            <div class="mb-3">
+                                                <label for="customer_choose_input" class="form-label">اختر
+                                                    العميل</label>
+                                                <select class="form-select"
+                                                        id="customer_choose_input"
+                                                        name="customer_choose_input"
+                                                        aria-label="Default select example required">
+                                                    <option disabled hidden selected value="">ابحث عن عميل...</option>
+                                                    {% for customer in customers %}
+                                                        <option value="{{ customer.id }}">
+                                                            {{ customer.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-6 col-12">
+                                            <div class="mb-3">
+                                                <label for="sale_channel_choose_input" class="form-label">اختر قناة
+                                                    التوزيع</label>
+                                                <select class="form-select"
+                                                        id="sale_channel_choose_input"
+                                                        name="sale_channel_choose_input"
+                                                        aria-label="Default select example required">
+                                                    <option disabled hidden selected>قائمة قنوات التوزيع</option>
+                                                    {% for channel in  sale_channels %}
+                                                        <option value="{{ channel.id }}">{{ channel.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-xl-6 col-12">
+                                            <div class="mb-3">
+                                                <label for="receiving_date_input" class="form-label">تاريخ
+                                                    الاستلام</label>
+                                                <input type="text" class="form-control expire_date-select"
+                                                       placeholder="اختر تاريخ الاستلام"
+                                                       id="receiving_date_input" name="receiving_date_input"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-6 col-12">
+                                            <label for="created_by_employee_choose_input" class="form-label">اختر الموظف
+                                                الذي
+                                                أنشأ الطلب</label>
+                                            <select class="form-select"
+                                                    id="created_by_employee_choose_input"
+                                                    name="created_by_employee_choose_input"
+                                                    aria-label="Default select example required">
+                                                <option disabled hidden selected>قائمة الموظفين</option>
+                                                {% for employee in  employees %}
+                                                    <option value="{{ employee.id }}">{{ employee.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xl-6 col-12">
+                                    <label for="note_input" class="form-label">الملحوظات</label>
+                                    <textarea class="form-control" id="note_input" name="note_input"
+                                              rows="6"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary m-2">حفظ الفاتورة</button>
+
+                        </form>
+                    </div>
+                </div>
+
+            {% endif %}
+
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'sneat/vendor/libs/jquery-repeater/jquery-repeater.js' %}"></script>
+
+    <script>
+        const branch_choose_input = $('#branch_choose_input')
+        const customer_choose_input = $('#customer_choose_input')
+        const sale_channel_choose_input = $('#sale_channel_choose_input')
+        const get_branch = $('#get_branch')
+        const receiving_date_input = $('#receiving_date_input')
+        const created_by_employee_choose_input = $('#created_by_employee_choose_input')
+
+        branch_choose_input.select2()
+        customer_choose_input.select2()
+        sale_channel_choose_input.select2()
+        created_by_employee_choose_input.select2()
+        receiving_date_input.datepicker({
+            format: "yyyy-mm-dd",
+        }).datepicker("setDate", 'now');
+
+        branch_choose_input.on('change', (e) => {
+            get_branch.submit()
+        })
+    </script>
 {% endblock %}
