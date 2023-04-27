@@ -25,5 +25,6 @@ urlpatterns = [
     path('human-resources/', include('human_resources.urls')),
     path('purchases/', include('purchases.urls')),
     path('sales/', include('sales.urls')),
+    path('accounts/', include('allauth.urls')),  # new
 
 ]

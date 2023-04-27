@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from psycopg2 import DatabaseError
 
 from inventory.branches.models import Branch
@@ -10,6 +12,7 @@ from purchases.purchase_invoices.forms import AddPurchaseChannel, AddPurchaseFor
 from purchases.purchase_invoices.models import PurchasingChannel, Purchase, PurchaseProduct
 
 
+# @login_required()
 def search_purchase_invoice(request):
     context = {}
     return render(request, 'purchases/purchase_invoices/search.html', context)
