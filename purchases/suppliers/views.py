@@ -70,6 +70,6 @@ def get_branch_suppliers(request):
     for supplier in suppliers:
         select2_data_list.append({
             'id': supplier.id,
-            'name': supplier.type.name + " -- " + supplier.name,
+            'name': supplier.type.name + ": " + supplier.name,
         })
     return JsonResponse(select2_data_list, safe=False)

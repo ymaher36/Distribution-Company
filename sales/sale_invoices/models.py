@@ -1,8 +1,8 @@
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 
-from human_resources.user_details.models import User
 from inventory.branches.models import Branch
 from purchases.purchase_invoices.models import PurchaseProduct
 from sales.customers.models import Customer
@@ -26,8 +26,8 @@ class Order(models.Model):
     amount_of_brands = models.IntegerField(null=True)
     note = models.CharField(max_length=400, null=True)
     state = models.CharField(max_length=20, null=False, blank=False, default='pending')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="create_user")
-    delivered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="deliver_user")
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="create_user")
+    delivered_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name="deliver_user")
 
 
 class OrderProducts(models.Model):

@@ -45,7 +45,8 @@
                         <h5 class="mb-0">إضافة فاتورة بيـــــــــع جديدة ( {{ branch.name }} )</h5>
                     </div>
                     <div class="card-body">
-                        <form id="get_branch" action="{% url 'sales:add_sale_invoice' %}" method="POST">
+                        <form action="{% url 'sales:add_sale_invoice' %}" id="invoice_product_form"
+                              class="form-repeater" method="POST">
                             {% csrf_token %}
                             <div class="row">
 
@@ -99,18 +100,31 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-xl-6 col-12">
-                                            <label for="created_by_employee_choose_input" class="form-label">اختر الموظف
-                                                الذي
-                                                أنشأ الطلب</label>
-                                            <select class="form-select"
-                                                    id="created_by_employee_choose_input"
-                                                    name="created_by_employee_choose_input"
-                                                    aria-label="Default select example required">
-                                                <option disabled hidden selected>قائمة الموظفين</option>
-                                                {% for employee in  employees %}
-                                                    <option value="{{ employee.id }}">{{ employee.name }}</option>
-                                                {% endfor %}
-                                            </select>
+
+                                            {% if user.is_superuser %}
+                                                <label for="created_by_employee_choose_input" class="form-label">اختر
+                                                    الموظف
+                                                    الذي
+                                                    أنشأ الطلب</label>
+                                                <select class="form-select"
+                                                        id="created_by_employee_choose_input"
+                                                        name="created_by_employee_choose_input"
+                                                        aria-label="Default select example required">
+                                                    <option disabled hidden selected>قائمة الموظفين</option>
+                                                    {% for employee in  employees %}
+                                                        <option value="{{ employee.id }}">{{ employee.first_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <label class="form-label">الموظف
+                                                    الذي
+                                                    أنشأ الطلب</label>
+                                                <input type="hidden" value="{{ user.id }}"
+
+                                                       name="created_by_employee_choose_input">
+                                                <h4 class="row justify-content-center">{{ user.first_name }}</h4>
+                                            {% endif %}
+
                                         </div>
                                     </div>
                                 </div>
@@ -120,14 +134,70 @@
                                               rows="6"></textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary m-2">حفظ الفاتورة</button>
+                            <hr>
+                            <h4>إضافة المنتجات للفاتورة</h4>
 
+                            <div data-repeater-list>
+                                <div data-repeater-item>
+                                    <div class="row">
+
+                                        <div class="mb-6 col-lg-6 col-xl-6 col-12 mb-0">
+
+                                            <label for="product_choose_input-1" class="form-label product-label">اختر
+                                                المنتج</label>
+                                            <select class="form-select product-select"
+                                                    id="product_choose_input-1"
+                                                    name="product_choose_input-1"
+                                                    aria-label="Default select example required">
+                                                <option disabled hidden selected>قائمة المنتجات</option>
+                                                {% for product in  products %}
+                                                    <option value="{{ product.id }}">{{ product.product.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                            <label class="form-label price-label" for="price-1">السعر</label>
+                                            <input type="number" id="price-1" name="price-1"
+                                                   class="form-control price-select" min="1"/>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                            <label class="form-label quantity-label" for="quantity-1">الكمية</label>
+                                            <input type="number" id="quantity-1" name="quantity-1"
+                                                   class="form-control quantity-select" min="1"/>
+                                        </div>
+                                        <input type="hidden" id="product-price-quantity-1"
+                                               class="product-price-quantity">
+                                        <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                            <button class="btn btn-label-danger mt-4" data-repeater-delete
+                                                    type="button">
+                                                <i class="bx bx-x me-1"></i>
+                                                <span class="align-middle">Delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-2 row justify-content-end">
+                                <div class="col-4">
+                                    <button class="btn btn-primary" data-repeater-create type="button">
+                                        <i class="bx bx-plus me-1"></i>
+                                        <span class="align-middle">إضافة منتج</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="m-2 row justify-content-center" id="total-price-container">
+                                <h5>إجمالي سعر الفاتورة: </h5>
+                                <h2 id="total-price"></h2>
+
+                            </div>
+                            <button type="submit" class="btn btn-primary m-2">حفظ الفاتورة</button>
                         </form>
                     </div>
                 </div>
-
             {% endif %}
-
         </div>
     </div>
 {% endblock %}
@@ -143,7 +213,12 @@
         const get_branch = $('#get_branch')
         const receiving_date_input = $('#receiving_date_input')
         const created_by_employee_choose_input = $('#created_by_employee_choose_input')
+        const total_price_container = $('#total-price-container')
+        const total_price_text = $('#total-price')
+        let invoice_product_form = $("#invoice_product_form");
+        let row = 2;
 
+        total_price_container.hide()
         branch_choose_input.select2()
         customer_choose_input.select2()
         sale_channel_choose_input.select2()
@@ -155,5 +230,96 @@
         branch_choose_input.on('change', (e) => {
             get_branch.submit()
         })
+        invoice_product_form.repeater({
+            show: function () {
+                let product_select = $(this).find('.product-select');
+                let product_label = $(this).find('.product-label');
+                let price_select = $(this).find('.price-select');
+                let price_label = $(this).find('.price-label');
+                let quantity_select = $(this).find('.quantity-select');
+                let quantity_label = $(this).find('.quantity-label');
+                let product_price_quantity = $(this).find('.product-price-quantity');
+
+
+                product_select.attr('id', 'product_choose_input-' + row)
+                product_select.attr('name', 'product_choose_input-' + row)
+                product_label.attr('for', 'product_choose_input-' + row)
+                price_select.attr('id', 'price-' + row)
+                price_select.attr('name', 'price-' + row)
+                price_label.attr('for', 'price-' + row)
+                quantity_select.attr('id', 'quantity-' + row)
+                quantity_select.attr('name', 'quantity-' + row)
+                quantity_label.attr('for', 'quantity-' + row)
+                product_price_quantity.attr('id', 'product-price-quantity-' + row)
+
+
+                row++;
+                $(this).slideDown();
+                $('.product-select').select2();
+                product_select.on('change', async (e) => {
+                    const product_id = e.target.value
+                    try {
+                        const response = await fetch(`/sales/sale-invoices/get-product-price?product_id=${product_id}`);
+                        const data = await response.json();
+                        price_select.val(data)
+                        price_select.trigger("change");
+                    } catch (e) {
+                        console.log(e)
+                    }
+                })
+
+                $('.price-select ,.quantity-select').on('change', (e) => {
+                    const price_value = parseInt(price_select.val()) * parseInt(quantity_select.val())
+                    product_price_quantity.val(price_value)
+                    calculate_total_price()
+                })
+
+            },
+            hide: function (e) {
+                confirm('هل أنت متأكد أنك تريد الحذف؟') && $(this).slideUp(e);
+            }, ready: function () {
+                const product_select = $('.product-select');
+                const price_select = $('.price-select')
+                const product_price_quantity = $('.product-price-quantity')
+                const quantity_select = $('.quantity-select');
+
+
+                product_select.select2();
+                product_select.on('change', async (e) => {
+                    const product_id = e.target.value
+                    try {
+                        const response = await fetch(`/sales/sale-invoices/get-product-price?product_id=${product_id}`);
+                        const data = await response.json();
+                        price_select.val(data)
+                        price_select.trigger("change");
+
+                    } catch (e) {
+                        console.log(e)
+                    }
+                })
+                $('.price-select ,.quantity-select').on('change', (e) => {
+                    const price_value = parseInt(price_select.val()) * parseInt(quantity_select.val())
+                    product_price_quantity.val(price_value)
+                    calculate_total_price()
+                })
+
+            }
+        });
+
+        function calculate_total_price() {
+            const price_list = $('.product-price-quantity')
+            let total_price = 0
+            for (let i = 0; i < price_list.length; i++) {
+                total_price += isNaN(price_list[i].value) ? 0 : parseInt(price_list[i].value)
+            }
+            if (total_price !== 0 && !isNaN(total_price)) {
+                total_price_container.show()
+                total_price_text.text(total_price + 'جنيه ')
+            } else {
+                total_price_container.hide()
+
+            }
+            console.log(total_price)
+        }
     </script>
 {% endblock %}

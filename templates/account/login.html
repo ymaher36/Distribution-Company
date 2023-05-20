@@ -145,7 +145,7 @@
                         </div>
                     </form>
                     {% if '__all__' not in form.errors.keys  %}
-                        {{ form.errors.keys }}
+                        {{ form.errors}}
                     {% endif %}
                     {{ form.non_field_errors }}
 

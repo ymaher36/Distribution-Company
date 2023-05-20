@@ -150,26 +150,26 @@
                                 {% for user in latest_users %}
                                     <tr>
                                         <td>
-                                            <strong>{{ user.name }}</strong>
+                                            <strong>{{ user.first_name }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.role.name }}</strong>
+                                            <strong>{{ user.user_details.role.name }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.gender }}</strong>
+                                            <strong>{{ user.user_details.gender }}</strong>
                                         </td>
 
                                         <td>
-                                            <strong>{{ user.national_id }}</strong>
+                                            <strong>{{ user.user_details.national_id }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.birthdate }}</strong>
+                                            <strong>{{ user.user_details.birthdate }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.phone_numbers.0 }}</strong>
+                                            <strong>{{ user.phone_numbers.all.0.phone_number }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.home_location.0 }}</strong>
+                                            <strong>{{ user.user_details.home_location.0 }}</strong>
                                         </td>
                                         <td>
                                             <div class="dropdown">

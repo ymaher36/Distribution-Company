@@ -1,17 +1,19 @@
 import datetime
 
+from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.db.models.functions import Coalesce
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.db.models import F, Subquery, OuterRef
+from psycopg2 import DatabaseError
 
-from human_resources.user_details.models import User
 from inventory.branches.models import Branch
 from purchases.purchase_invoices.models import PurchaseProduct
 from sales.customers.models import Customer
 from sales.sale_invoices.forms import AddSaleChannel, EditPriceListForm, GetBranchForm, AddSaleForm
-from sales.sale_invoices.models import PricingList, SellingChannel
+from sales.sale_invoices.models import PricingList, SellingChannel, Order, OrderProducts
 
 
 def search_sale_invoice(request):
@@ -20,7 +22,7 @@ def search_sale_invoice(request):
 
 
 def add_sale_invoice(request):
-    branches = Branch.objects.all()
+    branches = Branch.objects.all() if request.user.is_superuser else request.user.user_details.branch.all
     context = {
         'branches': branches,
     }
@@ -28,10 +30,10 @@ def add_sale_invoice(request):
         get_branch_form = GetBranchForm(request.GET)
         if get_branch_form.is_valid():
             branch_id = get_branch_form.cleaned_data.get('branch_choose_input')
-            branch = branches.filter(id=branch_id).first()
+            branch = Branch.objects.filter(id=branch_id).first()
             customers = Customer.objects.filter(branch_id=branch_id)
             sale_channels = SellingChannel.objects.all()
-            employees = User.objects.filter(branch_id=branch_id)
+            employees = get_user_model().objects.filter(user_details__branch__id=branch_id)
             products = PurchaseProduct.objects.filter(purchase__branch_id=branch_id,
                                                       sold_amount__lt=F('quantity')).annotate(
                 selling_price=Subquery(
@@ -45,10 +47,62 @@ def add_sale_invoice(request):
         else:
             print(get_branch_form.errors)
     elif request.POST:
-        add_sale_form = AddSaleForm(request.POST)
-        if add_sale_form.is_valid():
-            print(add_sale_form.cleaned_data)
+        products_form_names = list(request.POST.keys())[7:]
+        invoice_form = AddSaleForm(request.POST)
+        products_form_values_check = []
+        products_form_values = []
+        for form_input in request.POST.items():
+            if form_input[0] in products_form_names:
+                products_form_values_check.append(True if form_input[1] != '' else False)
+                products_form_values.append(form_input[1])
 
+        if invoice_form.is_valid() and len(products_form_names) % 3 == 0 and all(products_form_values_check):
+            products_dict = {}
+            total_price = 0
+            total_amount_boxes = 0
+            branch_id = invoice_form.cleaned_data.get('branch_name_input')
+            customer_id = invoice_form.cleaned_data.get('customer_choose_input')
+            sale_channel_id = invoice_form.cleaned_data.get('sale_channel_choose_input')
+            created_by_employee_id = invoice_form.cleaned_data.get('created_by_employee_choose_input')
+            receiving_date = invoice_form.cleaned_data.get('receiving_date_input')
+            note = invoice_form.cleaned_data.get('note_input')
+            for i in range(0, len(products_form_values), 3):
+                products_dict['product' + str(i // 3)] = products_form_values[i:i + 3]
+            for product in products_dict.values():
+                total_price += int(product[1]) * int(product[2])
+                total_amount_boxes += int(product[2])
+            sale_invoice = Order(
+                customer_id=customer_id,
+                branch_id=branch_id,
+                selling_channel_id=sale_channel_id,
+                total_price=total_price,
+                receiving_date=receiving_date,
+                amount_of_boxes=total_amount_boxes,
+                created_by_id=created_by_employee_id,
+                note=note,
+                state='sold'
+            )
+            try:
+                with transaction.atomic():
+                    sale_invoice.save()
+                    for product in products_dict.values():
+                        product_id = product[0]
+                        price = product[1]
+                        quantity = product[2]
+                        # ToDo handle price in OrderProducts model. Either by allowing editing the pricelist price or creating an discount on total invoice
+                        purchase_product = OrderProducts(
+                            order_id=sale_invoice.id,
+                            product_id=product_id,
+                            price=price,
+                            quantity=quantity
+                        )
+                        purchase_product.save()
+            except DatabaseError as e:
+                print(e)
+        elif invoice_form.errors:
+            print(invoice_form.errors)
+        else:
+            print("Error")
     return render(request, 'sales/sale_invoices/add_invoice.html', context)
 
 
@@ -114,3 +168,9 @@ def add_sale_channel(request):
             sale_channel.save()
     redirect_url = reverse('sales:sale_invoice_others')
     return HttpResponseRedirect(redirect_url)
+
+
+def get_product_price(request):
+    product_id = request.GET.get('product_id')
+    price = PricingList.objects.filter(product_id=product_id, end_date__isnull=True).first().selling_price
+    return JsonResponse(price, safe=False)

@@ -44,7 +44,7 @@ def add_purchase_invoice(request):
             for i in range(0, len(products_form_values), 4):
                 products_dict['product' + str(i // 4)] = products_form_values[i:i + 4]
             for product in products_dict.values():
-                total_price += int(product[2])
+                total_price += int(product[2])*int(product[3])
                 total_amount_boxes += int(product[3])
             purchase_invoice = Purchase(
                 branch_id=branch_id,

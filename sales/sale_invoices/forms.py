@@ -25,6 +25,9 @@ class AddSaleForm(forms.Form):
         required=True,
         input_formats=['%Y-%m-%d'],
     )
+    note_input = forms.CharField(
+        required=False
+    )
 
 
 class CustomMultipleChoiceField(forms.MultipleChoiceField):

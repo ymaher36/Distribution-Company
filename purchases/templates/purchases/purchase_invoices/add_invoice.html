@@ -21,34 +21,65 @@
                 </div>
                 <div class="card-body">
                     <form action="{% url 'purchases:add_purchase_invoice' %}" id="invoice_product_form"
-                          class="form-repeater" method="POST">                        {% csrf_token %}
+                          class="form-repeater" method="POST">
+                        {% csrf_token %}
                         <div class="row">
-                            <div class="col-lg-6 col-xl-3 col-12">
-                                <div class="mb-3">
-                                    <label for="branch_name_choose_input" class="form-label">اختر الفرع</label>
-                                    <select class="form-select"
-                                            id="branch_name_choose_input"
-                                            name="branch_name_choose_input"
-                                            aria-label="Default select example required">
-                                        <option disabled hidden selected>قائمة الأفرع</option>
-                                        {% for branch in branches %}
-                                            <option value="{{ branch.id }}">{{ branch.name }}</option>
-                                        {% endfor %}
-                                    </select>
+                            {% if user.is_superuser %}
+                                <div class="col-lg-6 col-xl-3 col-12">
+                                    <div class="mb-3">
+                                        <label for="branch_name_choose_input" class="form-label">اختر الفرع</label>
+                                        <select class="form-select"
+                                                id="branch_name_choose_input"
+                                                name="branch_name_choose_input"
+                                                aria-label="Default select example required">
+                                            <option disabled hidden selected>قائمة الأفرع</option>
+                                            {% for branch in branches %}
+                                                <option value="{{ branch.id }}">{{ branch.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 col-xl-6 col-12">
-                                <div class="mb-3">
-                                    <label for="supplier_choose_input" class="form-label">اختر المورد</label>
-                                    <select class="form-select"
-                                            id="supplier_choose_input"
-                                            name="supplier_choose_input"
-                                            aria-label="Default select example required">
-                                        <option disabled hidden selected>قائمة الموردين</option>
+                                <div class="col-lg-6 col-xl-6 col-12">
+                                    <div class="mb-3">
+                                        <label for="supplier_choose_input" class="form-label">اختر المورد</label>
+                                        <select class="form-select"
+                                                id="supplier_choose_input"
+                                                name="supplier_choose_input"
+                                                aria-label="Default select example required">
+                                            <option disabled hidden selected>قائمة الموردين</option>
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            {% else %}
+                                <div class="col-lg-6 col-xl-3 col-12">
+                                    <div class="mb-3">
+                                        <label for="branch_name_choose_input" class="form-label">اختر الفرع</label>
+                                        <select class="form-select"
+                                                id="branch_name_choose_input"
+                                                name="branch_name_choose_input"
+                                                aria-label="Default select example required">
+                                            <option disabled hidden selected>قائمة الأفرع</option>
+                                            {% for branch in user.user_details.branch.all %}
+                                                <option value="{{ branch.id }}">{{ branch.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xl-6 col-12">
+                                    <div class="mb-3">
+                                        <label for="supplier_choose_input" class="form-label">اختر المورد</label>
+                                        <select class="form-select"
+                                                id="supplier_choose_input"
+                                                name="supplier_choose_input"
+                                                aria-label="Default select example required">
+                                            <option disabled hidden selected>قائمة الموردين</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                             <div class="col-lg-6 col-xl-3 col-12">
                                 <div class="mb-3">
                                     <label for="purchase_channel_choose_input" class="form-label">اختر قناة
@@ -157,20 +188,16 @@
         const supplier_choose_input = $('#supplier_choose_input')
         const purchase_channel_choose_input = $('#purchase_channel_choose_input')
         const receiving_date_input = $('#receiving_date_input')
-        const quantity_1 = $('#quantity-1')
-        const price_1 = $('#price-1')
 
         let invoice_product_form = $("#invoice_product_form");
-        let invoice_form = $("#invoice_form");
-
         let row = 2;
 
         branch_name_choose_input.select2();
         supplier_choose_input.select2();
         purchase_channel_choose_input.select2();
         receiving_date_input.datepicker({
-                    format:"yyyy-mm-dd",
-                }).datepicker("setDate",'now');
+            format: "yyyy-mm-dd",
+        }).datepicker("setDate", 'now');
 
         supplier_choose_input.prop("disabled", true);
         branch_name_choose_input.on('change', async (e) => {

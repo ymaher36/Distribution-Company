@@ -1,8 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponseRedirect, QueryDict
 from django.shortcuts import render
-from django.urls import reverse
 
-from human_resources.user_details.models import User
 from inventory.branches.forms import AddBranch
 from inventory.branches.models import Branch, BranchPhoneNumber
 from inventory.products.forms import AddEmployeesToBranch
@@ -43,19 +42,18 @@ def add_branch(request):
 
 def add_employee_to_branch(request):
     branches = Branch.objects.all()
-    employees = User.objects.all()
-    employees_no_branch = employees.filter(branch__isnull=True)
+    employees = get_user_model().objects.filter(is_superuser=False, is_active=True)
+    employees_no_branch = employees.filter(user_details__branch__isnull=True, is_superuser=False, is_active=True)
     if request.GET:
         branch_id = request.GET.get('branch_name_choose_input')
-        employees = employees.filter(branch_id=branch_id)
+        employees = employees.filter(user_details__branch_id=branch_id)
     elif request.POST:
         form = AddEmployeesToBranch(request.POST)
         if form.is_valid():
             employee_id = form.cleaned_data.get('employee_name_choose_input')
             branch_id = form.cleaned_data.get('branch_name_choose_input2')
-            user = User.objects.filter(id=employee_id).first()
-            user.branch_id = branch_id
-            user.save()
+            user_details = get_user_model().objects.filter(id=employee_id).first().user_details
+            user_details.branch.add(branch_id)
     context = {
         'branches': branches,
         'employees': employees,
@@ -63,7 +61,4 @@ def add_employee_to_branch(request):
     }
     return render(request, "inventory/branches/add_employee_to_branch.html", context)
 
-
 # def delete_employee_from_branch(request):
-
-
