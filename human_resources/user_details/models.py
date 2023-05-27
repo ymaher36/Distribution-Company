@@ -1,3 +1,4 @@
+from django.core.validators import MinLengthValidator
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
@@ -10,7 +11,7 @@ from locations.addresses.models import Location
 class PhoneNumber(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, related_name="phone_numbers")
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=11)
 
     def __str__(self):
         return self.user.first_name + ", " + self.phone_number
@@ -24,7 +25,7 @@ class Role(models.Model):
 class UserDetails(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(get_user_model(), on_delete=models.PROTECT, related_name="user_details")
-    national_id = models.CharField(null=True, max_length=14, unique=True)
+    national_id = models.CharField(null=True, max_length=14, unique=True, validators=[MinLengthValidator(14)])
     start_work_date = models.DateField(null=True)
     end_work_date = models.DateField(null=True)
     gender = models.CharField(max_length=10, null=True)

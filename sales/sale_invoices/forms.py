@@ -28,6 +28,10 @@ class AddSaleForm(forms.Form):
     note_input = forms.CharField(
         required=False
     )
+    discount_input = forms.DecimalField(
+        required=False,
+        min_value=0,
+    )
 
 
 class CustomMultipleChoiceField(forms.MultipleChoiceField):

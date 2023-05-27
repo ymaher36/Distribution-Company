@@ -47,7 +47,7 @@ def add_sale_invoice(request):
         else:
             print(get_branch_form.errors)
     elif request.POST:
-        products_form_names = list(request.POST.keys())[7:]
+        products_form_names = list(request.POST.keys())[7:-1]
         invoice_form = AddSaleForm(request.POST)
         products_form_values_check = []
         products_form_values = []
@@ -66,16 +66,20 @@ def add_sale_invoice(request):
             created_by_employee_id = invoice_form.cleaned_data.get('created_by_employee_choose_input')
             receiving_date = invoice_form.cleaned_data.get('receiving_date_input')
             note = invoice_form.cleaned_data.get('note_input')
+            print(invoice_form.cleaned_data)
+            discount = invoice_form.cleaned_data.get('discount_input')
             for i in range(0, len(products_form_values), 3):
                 products_dict['product' + str(i // 3)] = products_form_values[i:i + 3]
             for product in products_dict.values():
                 total_price += int(product[1]) * int(product[2])
                 total_amount_boxes += int(product[2])
+            total_price -= discount
             sale_invoice = Order(
                 customer_id=customer_id,
                 branch_id=branch_id,
                 selling_channel_id=sale_channel_id,
                 total_price=total_price,
+                discount=discount,
                 receiving_date=receiving_date,
                 amount_of_boxes=total_amount_boxes,
                 created_by_id=created_by_employee_id,
@@ -90,6 +94,7 @@ def add_sale_invoice(request):
                         price = product[1]
                         quantity = product[2]
                         # ToDo handle price in OrderProducts model. Either by allowing editing the pricelist price or creating an discount on total invoice
+
                         purchase_product = OrderProducts(
                             order_id=sale_invoice.id,
                             product_id=product_id,

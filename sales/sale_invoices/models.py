@@ -19,6 +19,7 @@ class Order(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True)
     selling_channel = models.ForeignKey(SellingChannel, on_delete=models.CASCADE, null=True)
     total_price = models.FloatField(null=True)
+    discount = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     receiving_date = models.DateField(null=True)
     amount_of_boxes = models.FloatField(null=True)
@@ -35,10 +36,11 @@ class OrderProducts(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE, null=True)
     quantity = models.FloatField()
+    price = models.FloatField(null=True)
 
 
 class PricingList(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     selling_price = models.FloatField()
     end_date = models.DateTimeField(null=True)
-    product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE)
+    product = models.ForeignKey(PurchaseProduct, on_delete=models.CASCADE, related_name="pricing_list")

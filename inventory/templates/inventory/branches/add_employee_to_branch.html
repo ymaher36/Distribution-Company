@@ -38,7 +38,7 @@
                             <div class="table-responsive text-nowrap mini-table-container">
                                 <table class="table">
                                     <caption class="ms-4">
-                                        عدد الموظفين: {{ employees|length }}
+                                        عدد الموظفين: {{ branch_employees|length }}
                                     </caption>
                                     <thead>
                                     <tr>
@@ -47,7 +47,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for employee in employees %}
+                                    {% for employee in branch_employees %}
                                         <tr>
                                             <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
                                                 <strong>{{ employee.first_name }}</strong></td>

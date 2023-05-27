@@ -55,7 +55,7 @@
                                         <input type="hidden" class="form-control"
                                                id="branch_name_input"
                                                name="branch_name_input"
-                                               value="{{ branch.name }}">
+                                               value="{{ branch.id }}">
                                         <div class="col-lg-6 col-xl-6 col-12">
                                             <div class="mb-3">
                                                 <label for="customer_choose_input" class="form-label">اختر
@@ -188,12 +188,18 @@
                                 </div>
                             </div>
                             <hr>
+
                             <div class="m-2 row justify-content-center" id="total-price-container">
                                 <h5>إجمالي سعر الفاتورة: </h5>
                                 <h2 id="total-price"></h2>
 
                             </div>
-                            <button type="submit" class="btn btn-primary m-2">حفظ الفاتورة</button>
+                            <div class="m-2 row col-5 justify-content-start">
+                                <label for="discount_input">خصم على الفطورة</label>
+                                <input type="number" min="0" value="0" class="form-control" name="discount_input"
+                                       id="discount_input">
+                            </div>
+                            <button type="submit" class="col-3 btn btn-primary m-2">حفظ الفاتورة</button>
                         </form>
                     </div>
                 </div>
@@ -215,8 +221,10 @@
         const created_by_employee_choose_input = $('#created_by_employee_choose_input')
         const total_price_container = $('#total-price-container')
         const total_price_text = $('#total-price')
+        const discount_input = $('#discount_input')
         let invoice_product_form = $("#invoice_product_form");
         let row = 2;
+
 
         total_price_container.hide()
         branch_choose_input.select2()
@@ -229,6 +237,9 @@
 
         branch_choose_input.on('change', (e) => {
             get_branch.submit()
+        })
+        discount_input.on('change', (e) => {
+            calculate_total_price()
         })
         invoice_product_form.repeater({
             show: function () {
@@ -309,17 +320,19 @@
         function calculate_total_price() {
             const price_list = $('.product-price-quantity')
             let total_price = 0
+            const discount_amount = discount_input.val()
             for (let i = 0; i < price_list.length; i++) {
                 total_price += isNaN(price_list[i].value) ? 0 : parseInt(price_list[i].value)
             }
-            if (total_price !== 0 && !isNaN(total_price)) {
+            total_price -= discount_amount
+            if (total_price > 0 && !isNaN(total_price)) {
                 total_price_container.show()
+
                 total_price_text.text(total_price + 'جنيه ')
             } else {
                 total_price_container.hide()
 
             }
-            console.log(total_price)
         }
     </script>
 {% endblock %}

@@ -44,9 +44,11 @@ def add_employee_to_branch(request):
     branches = Branch.objects.all()
     employees = get_user_model().objects.filter(is_superuser=False, is_active=True)
     employees_no_branch = employees.filter(user_details__branch__isnull=True, is_superuser=False, is_active=True)
+    branch_employees = []
     if request.GET:
         branch_id = request.GET.get('branch_name_choose_input')
-        employees = employees.filter(user_details__branch_id=branch_id)
+        print(branch_id)
+        branch_employees = employees.filter(user_details__branch=branch_id)
     elif request.POST:
         form = AddEmployeesToBranch(request.POST)
         if form.is_valid():
@@ -58,6 +60,7 @@ def add_employee_to_branch(request):
         'branches': branches,
         'employees': employees,
         'employees_no_branch': employees_no_branch,
+        'branch_employees': branch_employees,
     }
     return render(request, "inventory/branches/add_employee_to_branch.html", context)
 

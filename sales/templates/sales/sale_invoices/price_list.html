@@ -14,7 +14,7 @@
             {% include 'sales/includes/navbar.html' with which_nav="sales_invoices" is_price_list=True %}
             <div class="card mb-4">
                 <div class="card-header col">
-                        <h5 class="mb-0">تعديل سعر منتج</h5>
+                    <h5 class="mb-0">تعديل سعر منتج</h5>
                 </div>
                 <div class="card-body">
                     <form action="{% url 'sales:price_list' %}" method="POST">
@@ -32,6 +32,7 @@
                                                 {{ product.product.name }} -- تاريخ انتهاء
                                                 الصلاحية: {{ product.expire_date }}
                                                 -- الفرع: {{ product.purchase.branch.name }}
+                                                -- سعر الشراء: {{ product.price }}
                                             </option>
                                         {% endfor %}
                                     </select>

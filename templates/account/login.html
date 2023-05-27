@@ -12,6 +12,7 @@
 
     <meta name="description" content=""/>
 
+    <link rel="stylesheet" href="{% static 'account/style.css' %}">
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{% static 'sneat/vendor/fonts/boxicons.css' %}"/>
@@ -144,8 +145,8 @@
                             <button class="btn btn-primary d-grid w-100" type="submit">تسجيل الدخول</button>
                         </div>
                     </form>
-                    {% if '__all__' not in form.errors.keys  %}
-                        {{ form.errors}}
+                    {% if '__all__' not in form.errors.keys %}
+                        {{ form.errors }}
                     {% endif %}
                     {{ form.non_field_errors }}
 
