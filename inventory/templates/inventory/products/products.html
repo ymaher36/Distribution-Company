@@ -96,7 +96,12 @@
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                            <a data-bs-toggle="modal"
+                                                               data-bs-target="#edit_product_modal"
+                                                               data-bs-product-name="{{ product.name }}"
+                                                               data-bs-product-id="{{ product.id }}"
+                                                               id="edit_product"
+                                                               class="dropdown-item" href="javascript:void(0);">
                                                                 <i class="bx bx-edit-alt me-1"></i>
                                                                 تعديل
                                                             </a>
@@ -125,9 +130,58 @@
         <!-- / Content -->
 
 
-        <div class="content-backdrop fade"></div>
     </div>
-
+    <div class="modal fade" id="edit_product_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل المنتج</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "inventory:edit_product" %}" method="POST">
+                {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_product_id_input" id="edited_product_id_input">
+                        <div class="row">
+                            <div class="col-8 m-2">
+                                <label for="edited_product_name_input" class="form-label">إسم المنتج</label>
+                                <input type="text" class="form-control" name="edited_product_name_input"
+                                       id="edited_product_name_input" value="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col m-2">
+                                <label for="edited_brand_search_choose_input" class="form-label">الماركات</label>
+                                <select id="edited_brand_search_choose_input"
+                                        name="edited_brand_search_choose_input"
+                                        class="select2 form-select form-select-lg" data-allow-clear="false">
+                                    <option disabled hidden selected value="">قائمة الماركات</option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col m-2">
+                                <label for="edited_category_search_choose_input" class="form-label">النوع</label>
+                                <select id="edited_category_search_choose_input"
+                                        name="edited_category_search_choose_input"
+                                        class="select2 form-select form-select-lg" data-allow-clear="false">
+                                    <option disabled hidden selected value="">قائمة الأنواع</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -137,8 +191,30 @@
     <script>
         const brandSelect = $("#brand_search_choose_input")
         const categorySelect = $("#category_search_choose_input")
+        const editProductModal = $("#edit_product_modal")
+
         brandSelect.select2()
         categorySelect.select2()
+
+        editProductModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const productId = target.dataset.bsProductId
+            const productName = target.dataset.bsProductName
+            const editedProductNameInput = editProductModal.find('#edited_product_name_input')
+            const editedProductIdInput = editProductModal.find('#edited_product_id_input')
+            const editedCategorySelect = editProductModal.find('#edited_category_search_choose_input')
+            const editedBrandSelect = editProductModal.find('#edited_brand_search_choose_input')
+
+            editedCategorySelect.select2({
+                dropdownParent: editProductModal
+            })
+            editedBrandSelect.select2({
+                dropdownParent: editProductModal
+            })
+
+            editedProductNameInput.val(productName)
+            editedProductIdInput.val(productId)
+        })
 
     </script>
 {% endblock %}

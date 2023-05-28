@@ -16,8 +16,8 @@ class Expense(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     amount = models.FloatField(null=True)
     note = models.CharField(max_length=500, null=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    type = models.ForeignKey(ExpenseType, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    type = models.ForeignKey(ExpenseType, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 

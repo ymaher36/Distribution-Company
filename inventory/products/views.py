@@ -2,7 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from inventory.products.forms import AddBrandForm, AddCategoryForm, AddProductForm, SearchProductForm
+from inventory.products.forms import AddBrandForm, AddCategoryForm, AddProductForm, SearchProductForm, EditProductForm, \
+    EditBrandForm, EditCategoryForm
 from inventory.products.models import Brand, ProductCategory, Product
 
 
@@ -57,6 +58,27 @@ def delete_product(request, product_id):
     return HttpResponseRedirect(reverse_url)
 
 
+def edit_product(request):
+    if request.method == "POST":
+        form = EditProductForm(request.POST)
+        if form.is_valid():
+            product_id = form.cleaned_data.get('edited_product_id_input')
+            product_name = form.cleaned_data.get('edited_product_name_input')
+            product_brand_id = form.cleaned_data.get('edited_brand_search_choose_input')
+            product_category_id = form.cleaned_data.get('edited_category_search_choose_input')
+            product = Product.objects.filter(id=product_id).first()
+            product.name = product_name
+            product.brand_id = product_brand_id
+            product.category_id = product_category_id
+            product.save()
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("error")
+    reverse_url = reverse("inventory:search_products")
+    return HttpResponseRedirect(reverse_url)
+
+
 def brands(request):
     brands = Brand.objects.all()
     product_categories = ProductCategory.objects.all()
@@ -85,6 +107,23 @@ def delete_brand(request, brand_id):
     return HttpResponseRedirect(reverse_url)
 
 
+def edit_brand(request):
+    if request.method == "POST":
+        form = EditBrandForm(request.POST)
+        if form.is_valid():
+            brand_id = form.cleaned_data.get('edited_brand_id_input')
+            brand_name = form.cleaned_data.get('edited_brand_name_input')
+            brand = Brand.objects.filter(id=brand_id).first()
+            brand.name = brand_name
+            brand.save()
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("Error")
+    reverse_url = reverse("inventory:brands")
+    return HttpResponseRedirect(reverse_url)
+
+
 def add_category(request):
     if request.method == "POST":
         form = AddCategoryForm(request.POST)
@@ -99,5 +138,22 @@ def add_category(request):
 def delete_category(request, category_id):
     category = ProductCategory.objects.get(id=category_id)
     category.delete()
+    reverse_url = reverse("inventory:brands")
+    return HttpResponseRedirect(reverse_url)
+
+
+def edit_category(request):
+    if request.method == "POST":
+        form = EditCategoryForm(request.POST)
+        if form.is_valid():
+            category_id = form.cleaned_data.get("edited_category_id_input")
+            category_name = form.cleaned_data.get("edited_category_name_input")
+            category = ProductCategory.objects.filter(id=category_id).first()
+            category.name = category_name
+            category.save()
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("Error")
     reverse_url = reverse("inventory:brands")
     return HttpResponseRedirect(reverse_url)

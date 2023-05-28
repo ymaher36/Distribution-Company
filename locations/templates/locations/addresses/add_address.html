@@ -70,7 +70,7 @@
                                 <div class="row">
                                     <hr>
                                     <h5 class="card-header">جدول بآخر 10 عناوين تمت إضافتها</h5>
-                                    <div class="table-responsive text-nowrap">
+                                    <div class="table-responsive text-nowrap mini-table-container">
                                         <table class="table">
                                             <thead>
                                             <tr>
@@ -104,13 +104,21 @@
                                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                                             </button>
                                                             <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="javascript:void(0);"
-                                                                ><i class="bx bx-edit-alt me-1"></i> تعديل</a
-                                                                >
-                                                                <a class="dropdown-item"
-                                                                   href="{% url 'locations:delete_address' address.id %}">
-                                                                    <i class="bx bx-trash me-1"></i>
-                                                                    حذف</a>
+                                                                <a data-bs-toggle="modal"
+                                                                   data-bs-target="#edit_location_modal"
+                                                                   data-bs-id="{{ address.id }}"
+                                                                   data-bs-governorate="{{ address.governorate_id }}"
+                                                                   data-bs-district="{{ address.district.id }}"
+                                                                   data-bs-street="{{ address.street }}"
+                                                                   data-bs-other="{{ address.other }}"
+                                                                   id="edit_location"
+                                                                   class="dropdown-item" href="javascript:void(0);">
+                                                                    <i class="bx bx-edit-alt me-1"></i>
+                                                                    تعديل
+                                                                </a> <a class="dropdown-item"
+                                                                        href="{% url 'locations:delete_address' address.id %}">
+                                                                <i class="bx bx-trash me-1"></i>
+                                                                حذف</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -132,6 +140,68 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="edit_location_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل العنوان</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "locations:edit_address" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_address_id_input" id="edited_address_id_input">
+                        <div class="row">
+                            <div class="col-5 m-2">
+                                <label for="edited_governorate_choose_input" class="form-label">اختر المحافظة</label>
+                                <select id="edited_governorate_choose_input"
+                                        name="edited_governorate_choose_input"
+                                        class="select2 form-select form-select-lg" data-allow-clear="false">
+                                    <option disabled hidden selected value="">ابحث عن محافظة...</option>
+                                    {% for governorate in governorates %}
+                                        <option value="{{ governorate.id }}">{{ governorate.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-6 m-2">
+                                <label for="edited_district_choose_input" class="form-label">اختر المنطقة</label>
+                                <select class="select2 form-select form-select-lg"
+                                        id="edited_district_choose_input"
+                                        name="edited_district_choose_input"
+                                        aria-label="Default select example" disabled>
+                                    <option disabled hidden selected>ابحث عن منطقة...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col m-2">
+                                <label class="form-label" for="edited_street_name_input">ادخل الشارع</label>
+                                <input type="text" id="edited_street_name_input" name="edited_street_name_input"
+                                       placeholder="مثال: شارع النقل و الهندسة..."
+                                       class="form-control bootstrap-maxlength-example" maxlength="25"/>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col m-2">
+                                <label class="form-label" for="edited_other_input">أدخل أي معلومات إضافية</label>
+                                <textarea id="edited_other_input" name="edited_other_input"
+                                          placeholder="مثال: بجانب صيدلية محمد هشام"
+                                          class="form-control bootstrap-maxlength-example" rows="3"
+                                          maxlength="500"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block styles %}
@@ -140,29 +210,70 @@
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
     <script>
+        const governorateChooseInput = $("#governorate_choose_input")
+        const districtChooseInput = $("#district_choose_input")
+        const editLocationModal = $("#edit_location_modal")
+        governorateChooseInput.select2()
+        districtChooseInput.select2()
         $(() => {
-            governorate_choose_input = $("#governorate_choose_input")
-            district_choose_input = $("#district_choose_input")
 
-            district_choose_input.select2()
-            district_choose_input.attr('disabled', true)
-
-            governorate_choose_input.select2()
-            governorate_choose_input.on('change', async (e) => {
+            districtChooseInput.attr('disabled', true)
+            governorateChooseInput.on('change', async (e) => {
                 const governorate_value = e.target.value
                 try {
                     const response = await fetch(`/locations/address/get-district-related-to-governorate?governorate_id=${governorate_value}`)
                     const data = await response.json();
-                    district_choose_input.empty()
+                    districtChooseInput.empty()
                     data.forEach(elem => {
-                        district_choose_input.append(new Option(elem.name, elem.id, false, false))
+                        districtChooseInput.append(new Option(elem.name, elem.id, false, false))
                     })
-                    district_choose_input.attr('disabled', false)
+                    districtChooseInput.attr('disabled', false)
                 } catch (e) {
                     console.error(e)
                 }
             });
         });
+        editLocationModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const addressId = target.dataset.bsId
+            const addressGovernorate = target.dataset.bsGovernorate
+            const addressDistrict = target.dataset.bsDistrict
+            const addressStreet = target.dataset.bsStreet
+            const addressOther = target.dataset.bsOther
+            const editedAddressId = editLocationModal.find('#edited_address_id_input')
+            const editedGovernorateSelect = editLocationModal.find('#edited_governorate_choose_input')
+            const editedDistrictSelect = editLocationModal.find('#edited_district_choose_input')
+            const editedStreetInput = editLocationModal.find('#edited_street_name_input')
+            const editedOtherInput = editLocationModal.find('#edited_other_input')
+
+            editedGovernorateSelect.select2({
+                dropdownParent: editLocationModal
+            })
+            editedDistrictSelect.select2({
+                dropdownParent: editLocationModal
+            })
+
+            editedGovernorateSelect.on('change', async (e) => {
+                const governorate_value = e.target.value
+                try {
+                    const response = await fetch(`/locations/address/get-district-related-to-governorate?governorate_id=${governorate_value}`)
+                    const data = await response.json();
+                    editedDistrictSelect.empty()
+                    data.forEach(elem => {
+                        editedDistrictSelect.append(new Option(elem.name, elem.id, false, false))
+                    })
+                    editedDistrictSelect.val(addressDistrict)
+                    editedDistrictSelect.attr('disabled', false)
+                } catch (e) {
+                    console.error(e)
+                }
+            });
+            editedGovernorateSelect.val(addressGovernorate).trigger('change')
+            editedStreetInput.val(addressStreet)
+            editedOtherInput.val(addressOther)
+            editedAddressId.val(addressId)
+
+        })
     </script>
 
 {% endblock %}

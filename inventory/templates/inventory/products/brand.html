@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-     الماركات و الأنواع
+    الماركات و الأنواع
 {% endblock %}
 {% block body %}
     <div class="content-wrapper">
@@ -8,7 +8,7 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
             <!-- Layout Demo -->
-            {% include 'inventory/products/../includes/navbar.html' with which_nav="products" is_brand=True   %}
+            {% include 'inventory/products/../includes/navbar.html' with which_nav="products" is_brand=True %}
             <div class="row">
                 <div class="col-xl ">
                     <div class="card">
@@ -50,13 +50,18 @@
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                        ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                                                        >
-                                                        <a class="dropdown-item"
-                                                           href="{% url 'inventory:delete_brand' brand.id %}"
-                                                        ><i class="bx bx-trash me-1"></i> حذف</a
-                                                        >
+                                                        <a data-bs-toggle="modal"
+                                                           data-bs-target="#edit_brand_modal"
+                                                           data-bs-brand-name="{{ brand.name }}"
+                                                           data-bs-brand-id="{{ brand.id }}"
+                                                           id="edit_brand"
+                                                           class="dropdown-item" href="javascript:void(0);">
+                                                            <i class="bx bx-edit-alt me-1"></i>
+                                                            تعديل
+                                                        </a> <a class="dropdown-item"
+                                                                href="{% url 'inventory:delete_brand' brand.id %}"
+                                                    ><i class="bx bx-trash me-1"></i> حذف</a
+                                                    >
                                                     </div>
                                                 </div>
                                             </td>
@@ -112,13 +117,18 @@
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                        ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                                                        >
-                                                        <a class="dropdown-item"
-                                                           href="{% url 'inventory:delete_category' category.id %}"
-                                                        ><i class="bx bx-trash me-1"></i> حذف</a
-                                                        >
+                                                        <a data-bs-toggle="modal"
+                                                           data-bs-target="#edit_category_modal"
+                                                           data-bs-category-name="{{ category.name }}"
+                                                           data-bs-category-id="{{ category.id }}"
+                                                           id="edit_product"
+                                                           class="dropdown-item" href="javascript:void(0);">
+                                                            <i class="bx bx-edit-alt me-1"></i>
+                                                            تعديل
+                                                        </a> <a class="dropdown-item"
+                                                                href="{% url 'inventory:delete_category' category.id %}"
+                                                    ><i class="bx bx-trash me-1"></i> حذف</a
+                                                    >
                                                     </div>
                                                 </div>
                                             </td>
@@ -141,9 +151,88 @@
     </div>
     <!-- / Content -->
 
-    <div class="content-backdrop fade"></div>
+    <div class="modal fade" id="edit_brand_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل المركة</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "inventory:edit_brand" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_brand_id_input" id="edited_brand_id_input">
+                        <div class="row">
+                            <div class="col-8 m-2">
+                                <label for="edited_brand_name_input" class="form-label">إسم المركة</label>
+                                <input type="text" class="form-control" name="edited_brand_name_input"
+                                       id="edited_brand_name_input" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_category_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل النوع</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "inventory:edit_category" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_category_id_input" id="edited_category_id_input">
+                        <div class="row">
+                            <div class="col-8 m-2">
+                                <label for="edited_category_name_input" class="form-label">إسم النوع</label>
+                                <input type="text" class="form-control" name="edited_category_name_input"
+                                       id="edited_category_name_input" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block scripts %}
+    <script>
+        const editCategoryModal = $("#edit_category_modal")
+        const editBrandModal = $("#edit_brand_modal")
+
+        editCategoryModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const categoryId = target.dataset.bsCategoryId
+            const categoryName = target.dataset.bsCategoryName
+            const editedCategoryNameInput = editCategoryModal.find('#edited_category_name_input')
+            const editedCategoryIdInput = editCategoryModal.find('#edited_category_id_input')
+
+            editedCategoryNameInput.val(categoryName)
+            editedCategoryIdInput.val(categoryId)
+        })
+        editBrandModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const brandId = target.dataset.bsBrandId
+            const brandName = target.dataset.bsBrandName
+            const editedBrandNameInput = editBrandModal.find('#edited_brand_name_input')
+            const editedBrandIdInput = editBrandModal.find('#edited_brand_id_input')
+
+            editedBrandNameInput.val(brandName)
+            editedBrandIdInput.val(brandId)
+        })
+
+    </script>
 
 {% endblock %}

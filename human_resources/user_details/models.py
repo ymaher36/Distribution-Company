@@ -30,8 +30,8 @@ class UserDetails(models.Model):
     end_work_date = models.DateField(null=True)
     gender = models.CharField(max_length=10, null=True)
     birthdate = models.DateField(null=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
-    home_location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True)
+    home_location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
     branch = models.ManyToManyField(Branch)
     created_at = models.DateField(auto_now_add=True, blank=True)
 

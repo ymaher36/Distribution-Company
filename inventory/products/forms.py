@@ -13,6 +13,39 @@ class AddCategoryForm(forms.Form):
     )
 
 
+class EditCategoryForm(forms.Form):
+    edited_category_id_input = forms.UUIDField(
+        required=True
+    )
+    edited_category_name_input = forms.CharField(
+        required=True
+    )
+
+
+class EditBrandForm(forms.Form):
+    edited_brand_id_input = forms.UUIDField(
+        required=True
+    )
+    edited_brand_name_input = forms.CharField(
+        required=True
+    )
+
+
+class EditProductForm(forms.Form):
+    edited_product_id_input = forms.UUIDField(
+        required=True
+    )
+    edited_product_name_input = forms.CharField(
+        required=True
+    )
+    edited_brand_search_choose_input = forms.UUIDField(
+        required=True
+    )
+    edited_category_search_choose_input = forms.UUIDField(
+        required=True
+    )
+
+
 class AddProductForm(forms.Form):
     product_name_input = forms.CharField(
         required=True
