@@ -4,8 +4,9 @@ from django.urls import reverse
 
 from inventory.branches.models import Branch
 from locations.addresses.models import Location
-from purchases.suppliers.forms import AddSupplier, AddSupplierType
-from purchases.suppliers.models import SupplierType, Supplier
+from purchases.suppliers.forms import AddSupplier, AddSupplierType, EditSupplier, AddSupplierPhoneNumber, \
+    AddSupplierToBranch
+from purchases.suppliers.models import SupplierType, Supplier, PhoneNumber
 
 
 def search_supplier(request):
@@ -25,12 +26,16 @@ def add_supplier(request):
             branch_id = form.cleaned_data.get('branch_name_choose_input')
             supplier_type_id = form.cleaned_data.get('supplier_type_choose_input')
             address_id = form.cleaned_data.get('address_choose_input')
+            number = form.cleaned_data.get('supplier_phone_number_input')
             supplier = Supplier(
                 name=supplier_name,
-                branch_id=branch_id,
                 type_id=supplier_type_id
             )
+            phone_number = PhoneNumber(number=number)
+            phone_number.save()
             supplier.save()
+            supplier.branch.add(branch_id)
+            supplier.phone_number.add(phone_number)
             supplier.location.add(address_id)
 
     context = {
@@ -40,6 +45,60 @@ def add_supplier(request):
         "latest_suppliers": latest_suppliers,
     }
     return render(request, 'purchases/suppliers/add_supplier.html', context)
+
+
+def edit_supplier(request):
+    if request.method == "POST":
+        form = EditSupplier(request.POST)
+        if form.is_valid():
+            supplier_id = form.cleaned_data.get("edited_supplier_id_input")
+            supplier_name = form.cleaned_data.get("edited_supplier_name_input")
+            type_id = form.cleaned_data.get("edited_supplier_type_choose_input")
+            supplier = Supplier.objects.filter(id=supplier_id).first()
+            supplier.name = supplier_name
+            supplier.type_id = type_id
+            supplier.save()
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("ERROR")
+    reverse_url = reverse("purchases:add_supplier")
+    return HttpResponseRedirect(reverse_url)
+
+
+def add_supplier_to_branch(request):
+    if request.method == "POST":
+        form = AddSupplierToBranch(request.POST)
+        if form.is_valid():
+            supplier_id = form.cleaned_data.get('edited_supplier_id_input')
+            branch_id = form.cleaned_data.get('edited_branch_name_choose_input')
+            supplier = Supplier.objects.filter(id=supplier_id).first()
+            if not supplier.branch.filter(id=branch_id).exists():
+                supplier.branch.add(branch_id)
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("ERROR")
+    reverse_url = reverse("purchases:add_supplier")
+    return HttpResponseRedirect(reverse_url)
+
+
+def add_supplier_phone_number(request):
+    if request.method == "POST":
+        form = AddSupplierPhoneNumber(request.POST)
+        if form.is_valid():
+            supplier_id = form.cleaned_data.get("edited_supplier_id_input")
+            number = form.cleaned_data.get("edited_supplier_phone_number_input")
+            phone_number = PhoneNumber(number=number)
+            phone_number.save()
+            supplier = Supplier.objects.filter(id=supplier_id).first()
+            supplier.phone_number.add(phone_number)
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("ERROR")
+    reverse_url = reverse("purchases:add_supplier")
+    return HttpResponseRedirect(reverse_url)
 
 
 def supplier_others(request):

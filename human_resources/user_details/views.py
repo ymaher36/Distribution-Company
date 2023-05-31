@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from human_resources.user_details.forms import AddNewUserForm, AddRole
+from human_resources.user_details.forms import AddNewUserForm, AddRole, EditUser, EditAccount
 from human_resources.user_details.models import UserDetails, Role, PhoneNumber
 from locations.addresses.models import Location
 
@@ -55,6 +56,62 @@ def delete_user(request, user_id):
     user = get_user_model().objects.filter(id=user_id).first()
     user.is_active = False
     user.save()
+    reverse_url = reverse("human_resources:add_user")
+    return HttpResponseRedirect(reverse_url)
+
+
+def edit_user(request):
+    if request.method == "POST":
+        form = EditUser(request.POST)
+        if form.is_valid():
+            user_id = form.cleaned_data.get('edited_user_id_input')
+            user_details_id = form.cleaned_data.get('edited_user_details_id_input')
+            first_name = form.cleaned_data.get('edited_user_name_input')
+            national_id = form.cleaned_data.get('edited_national_id_input')
+            role_id = form.cleaned_data.get('edited_role_choose_input')
+            gender = form.cleaned_data.get('edited_gender_choose_input')
+            birthdate = form.cleaned_data.get('edited_birthdate_input')
+            start_work_date = form.cleaned_data.get('edited_start_work_date_input')
+            user = get_user_model().objects.filter(id=user_id).first()
+            user_details = user.user_details
+            try:
+                with transaction.atomic():
+                    user.first_name = first_name
+                    user_details.national_id = national_id
+                    user_details.role_id = role_id
+                    user_details.gender = gender
+                    user_details.birthdate = birthdate
+                    user_details.start_work_date = start_work_date
+                    user.save()
+                    user_details.save()
+            except Exception as e:
+                print(e)
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("ERROR")
+    reverse_url = reverse("human_resources:add_user")
+    return HttpResponseRedirect(reverse_url)
+
+
+def edit_account(request):
+    if request.method == "POST":
+        form = EditAccount(request.POST)
+        if form.is_valid():
+            user_id = form.cleaned_data.get('edited_user_id_input')
+            password = form.cleaned_data.get('password_input')
+            username = form.cleaned_data.get('username_input')
+            if get_user_model().objects.filter(username=username).exists():
+                raise ValidationError(u'Username "%s" is already used.' % username)
+            else:
+                user = get_user_model().objects.filter(id=user_id).first()
+                user.username = username
+                user.set_password(password)
+                user.save()
+        elif form.errors:
+            print(form.errors)
+        else:
+            print("Error")
     reverse_url = reverse("human_resources:add_user")
     return HttpResponseRedirect(reverse_url)
 

@@ -50,7 +50,17 @@
                                 </div>
 
                             </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="customer_phone_number_input">ادخل رقم هاتف
+                                        العميل</label>
+                                    <input type="text" oninput="numOnly(this.id);" maxlength="11"
+                                           id="customer_phone_number_input" name="customer_phone_number_input"
+                                           class="form-control bootstrap-maxlength-example"
+                                           placeholder="************01"/>
+                                </div>
 
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col">
@@ -134,6 +144,8 @@
                                     <th>الفرع</th>
                                     <th>النوع</th>
                                     <th>العنوان</th>
+                                    <th>رقم الهاتف</th>
+
 
                                 </tr>
                                 </thead>
@@ -144,16 +156,24 @@
                                             <strong>{{ customer.name }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ customer.branch.name }}</strong>
+                                            {% for branch in customer.branch.all %}
+                                                <strong>{{ branch.name }}</strong><br/>
+                                            {% endfor %}
                                         </td>
                                         <td>
                                             <strong>{{ customer.type.name }}</strong>
                                         </td>
 
                                         <td>
-                                            <strong>{{ customer.location.first }}</strong>
+                                            {% for location in customer.location.all %}
+                                                <strong>{{ location }}</strong><br/>
+                                            {% endfor %}
                                         </td>
-
+                                        <td>
+                                            {% for phone_number in customer.phone_number.all %}
+                                                <strong>{{ phone_number.number }}</strong><br/>
+                                            {% endfor %}
+                                        </td>
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -161,15 +181,39 @@
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#edit_customer_modal"
+                                                       data-bs-id="{{ customer.id }}"
+                                                       data-bs-name="{{ customer.name }}"
+                                                       data-bs-type="{{ customer.type.id }}"
+                                                       id="edit_customer"
+                                                       class="dropdown-item" href="javascript:void(0);">
                                                         <i class="bx bx-edit-alt me-1"></i>
                                                         تعديل
                                                     </a>
-                                                    <a class="dropdown-item"
-                                                       href="javascript:void(0);">
-                                                        <i class="bx bx-trash me-1"></i>
-                                                        حذف
+                                                    {#  TODO change icons #}
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#add_customer_number_modal"
+                                                       data-bs-id="{{ customer.id }}"
+                                                       data-bs-name="{{ customer.name }}"
+                                                       id="add_customer_number"
+                                                       class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        إضافة رقم هاتف
                                                     </a>
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#add_customer_branch_modal"
+                                                       data-bs-id="{{ customer.id }}"
+                                                       data-bs-name="{{ customer.name }}"
+                                                       id="add_customer_branch"
+                                                       class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        إضافة العميل إلى فرع
+                                                    </a> <a class="dropdown-item"
+                                                            href="javascript:void(0);">
+                                                    <i class="bx bx-trash me-1"></i>
+                                                    حذف
+                                                </a>
                                                 </div>
                                             </div>
                                         </td>
@@ -185,6 +229,116 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="edit_customer_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل بيانات العميل</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "sales:edit_customer" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_customer_id_input" id="edited_customer_id_input">
+                        <div class="row">
+                            <div class="col-5 m-2">
+                                <label for="edited_customer_name_input" class="form-label">أسم العميل</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edited_customer_name_input"
+                                        name="edited_customer_name_input"
+                                        required
+                                />
+                            </div>
+                            <div class="col-6 m-2">
+                                <label for="edited_customer_type_choose_input" class="form-label">اختر نوع
+                                    العميل</label>
+                                <select class="form-select"
+                                        id="edited_customer_type_choose_input"
+                                        name="edited_customer_type_choose_input"
+                                        aria-label="Default select example">
+                                    <option disabled hidden selected>قائمة الأنواع</option>
+                                    {% for type in types %}
+                                        <option value="{{ type.id }}">{{ type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_customer_branch_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="add_customer_branch_title">إضافة العميل إلى فرع</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "sales:add_customer_branch" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_customer_id_input" id="edited_customer_id_input">
+                        <div class="row">
+                            <div class="col m-2">
+                                <label for="edited_branch_name_choose_input" class="form-label">اختر الفرع</label>
+                                <select class="form-select"
+                                        id="edited_branch_name_choose_input"
+                                        name="edited_branch_name_choose_input"
+                                        aria-label="Default select example required">
+                                    <option disabled hidden selected>قائمة الأفرع</option>
+                                    {% for branch in branches %}
+                                        <option value="{{ branch.id }}">{{ branch.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_customer_number_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="add_customer_phone_number_title">إضافة رقم هاتف للعميل</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "sales:add_customer_phone_number" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_customer_id_input" id="edited_customer_id_input">
+                        <div class="row">
+                            <div class="col m-2">
+                                <label class="form-label" for="edited_customer_phone_number_input">ادخل رقم هاتف
+                                    العميل</label>
+                                <input type="text" oninput="numOnly(this.id);" maxlength="11"
+                                       id="edited_customer_phone_number_input" name="edited_customer_phone_number_input"
+                                       class="form-control bootstrap-maxlength-example"
+                                       placeholder="************01"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
@@ -193,6 +347,9 @@
         const address_table_row = $('#address_table_row')
         const address_table = $('#address_table')
         const address_table_body = $('#address_table_body')
+        const editCustomerModal = $('#edit_customer_modal')
+        const addCustomerBranchModal = $('#add_customer_branch_modal')
+        const addCustomerNumberModal = $('#add_customer_number_modal')
 
         address_choose_input.select2();
         $("#branch_name_choose_input").select2();
@@ -213,6 +370,62 @@
                 console.error(e)
             }
         })
+
+        editCustomerModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const customerId = target.dataset.bsId
+            const name = target.dataset.bsName
+            const typeId = target.dataset.bsType
+
+            const customerIdInput = editCustomerModal.find('#edited_customer_id_input')
+            const customerNameInput = editCustomerModal.find('#edited_customer_name_input')
+            const customerTypeInput = editCustomerModal.find('#edited_customer_type_choose_input')
+
+            customerTypeInput.select2({
+                dropdownParent: editCustomerModal
+            })
+            customerTypeInput.val(typeId).trigger('change')
+            customerIdInput.val(customerId)
+            customerNameInput.val(name)
+        })
+        addCustomerBranchModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+
+            const customerId = target.dataset.bsId
+            const name = target.dataset.bsName
+
+            const customerIdInput = addCustomerBranchModal.find('#edited_customer_id_input')
+            const customerBranchInput = addCustomerBranchModal.find('#edited_branch_name_choose_input')
+            const title = addCustomerBranchModal.find('#add_customer_branch_title')
+
+            customerBranchInput.select2({
+                dropdownParent: addCustomerBranchModal
+            })
+            customerIdInput.val(customerId)
+            title.html("إضافة العميل " + name + " إلى فرع")
+
+        })
+        addCustomerNumberModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const customerId = target.dataset.bsId
+            const name = target.dataset.bsName
+
+            const customerIdInput = addCustomerNumberModal.find('#edited_customer_id_input')
+            const title = addCustomerNumberModal.find('#add_customer_phone_number_title')
+
+            customerIdInput.val(customerId)
+            title.html("إضافة رقم هاتف للعميل " + name)
+        })
+    </script>
+    <script>
+        function numOnly(id) {
+            // Get the element by id
+            let element = document.getElementById(id);
+            // Use numbers only pattern, from 0 to 9 with \-
+            let regex = /[^0-9\-]/gi;
+            // Replace other characters that are not in regex pattern
+            element.value = element.value.replace(regex, "");
+        }
 
     </script>
 {% endblock %}

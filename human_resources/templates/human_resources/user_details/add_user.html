@@ -34,11 +34,8 @@
                                 <div class="mb-3">
                                     <label for="national_id_input" class="form-label">الرقم القومي</label>
                                     <input
-
-                                            type="number"
-                                            class="form-control"
-                                            id="national_id_input"
-                                            name="national_id_input"
+                                            type="text" oninput="numOnly(this.id);" maxlength="14" minlength="14"
+                                            class="form-control" id="national_id_input" name="national_id_input"
                                     />
                                 </div>
                             </div>
@@ -61,7 +58,8 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="user_phone_number_input">ادخل رقم هاتف
                                         الموظف</label>
-                                    <input type="tel" id="user_phone_number_input" name="user_phone_number_input"
+                                    <input type="text" oninput="numOnly(this.id);" maxlength="11"
+                                           id="user_phone_number_input" name="user_phone_number_input"
                                            class="form-control bootstrap-maxlength-example"
                                            placeholder="************01"/>
                                 </div>
@@ -140,7 +138,6 @@
                                     <th>الوظيفة</th>
                                     <th>النوع</th>
                                     <th>الرقم القومي</th>
-                                    <th>تاريخ الميلاد</th>
                                     <th>رقم الهاتف</th>
                                     <th>العنوان</th>
                                     <th>أجراءات</th>
@@ -163,13 +160,10 @@
                                             <strong>{{ user.user_details.national_id }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.user_details.birthdate }}</strong>
-                                        </td>
-                                        <td>
                                             <strong>{{ user.phone_numbers.all.0.phone_number }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ user.user_details.home_location.0 }}</strong>
+                                            <strong>{{ user.user_details.home_location }}</strong>
                                         </td>
                                         <td>
                                             <div class="dropdown">
@@ -178,9 +172,34 @@
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#edit_user_details_modal"
+                                                       data-bs-id="{{ user.id }}"
+                                                       data-bs-user-details-id="{{ user.user_details.id }}"
+                                                       data-bs-first-name="{{ user.first_name }}"
+                                                       data-bs-national-id="{{ user.user_details.national_id }}"
+                                                       data-bs-role="{{ user.user_details.role.id }}"
+                                                       data-bs-gender="{{ user.user_details.gender }}"
+                                                       data-bs-birthdate="{{ user.user_details.birthdate }}"
+                                                       data-bs-start-work-date="{{ user.user_details.start_work_date }}"
+                                                            {# ToDo edit locations and phone numbers   #}
+                                                       id="edit_user_details"
+                                                       class="dropdown-item" href="javascript:void(0);">
                                                         <i class="bx bx-edit-alt me-1"></i>
                                                         تعديل
+                                                    </a>
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#edit_user_account_modal"
+                                                       data-bs-id="{{ user.id }}"
+                                                       data-bs-username="{{ user.username }}"
+                                                       id="edit_user_account"
+                                                       class="dropdown-item" href="javascript:void(0);">
+                                                        <i class='bx bx-user-circle me-1'></i>
+                                                        حساب الموظف
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0);">
+                                                        <i class='bx bx-user-check me-1'></i>
+                                                        صلاحيات الموظف
                                                     </a>
                                                     <a class="dropdown-item"
                                                        href="{% url "human_resources:delete_user" user.id %}">
@@ -202,6 +221,121 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="edit_user_details_modal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل بيانات الموظف</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "human_resources:edit_user" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_user_id_input" id="edited_user_id_input">
+                        <input type="hidden" name="edited_user_details_id_input" id="edited_user_details_id_input">
+                        <div class="row">
+                            <div class="col-4 m-2">
+                                <label for="edited_user_name_input" class="form-label">أسم الموظف</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edited_user_name_input"
+                                        name="edited_user_name_input"
+                                />
+                            </div>
+                            <div class="col-4 m-2">
+                                <label for="edited_national_id_input" class="form-label">الرقم القومي</label>
+                                <input
+
+                                        type="text" oninput="numOnly(this.id);" maxlength="14" minlength="14"
+                                        class="form-control"
+                                        id="edited_national_id_input"
+                                        name="edited_national_id_input"
+                                />
+                            </div>
+                            <div class="col-3 m-2">
+                                <label for="edited_role_choose_input" class="form-label">اختر الوظيفة</label>
+                                <select id="edited_role_choose_input"
+                                        name="edited_role_choose_input"
+                                        class="select2 form-select form-select-lg" data-allow-clear="false">
+                                    <option disabled hidden selected value="">ابحث عن وظيفة...</option>
+                                    {% for role in roles %}
+                                        <option value="{{ role.id }}">{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-4 m-2">
+                                <label for="edited_birthdate_input" class="form-label">تاريخ الميلاد</label>
+                                <input type="text" class="form-control" placeholder="اختر تاريخ الميلاد"
+                                       id="edited_birthdate_input" name="edited_birthdate_input"/>
+                            </div>
+                            <div class="col-3 m-2">
+                                <label for="edited_gender_choose_input" class="form-label">اختر النوع</label>
+                                <select id="edited_gender_choose_input"
+                                        name="edited_gender_choose_input"
+                                        class="form-select " data-allow-clear="false">
+                                    <option value="ذكر">ذكر</option>
+                                    <option value="أنثي">أنثي</option>
+                                </select>
+                            </div>
+                            <div class="col-4 m-2">
+                                <label for="edited_start_work_date_input" class="form-label">تاريخ بداية العمل</label>
+                                <input type="text" class="form-control" placeholder="اختر تاريخ بداية العمل"
+                                       id="edited_start_work_date_input" name="edited_start_work_date_input"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_user_account_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل حساب الموظف</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url "human_resources:edit_account" %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_user_id_input" id="edited_user_id_input">
+                        <div class="row">
+                            <div class="col-6 m-2">
+                                <label for="username_input" class="form-label">اسم المستخدم</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="username_input"
+                                        name="username_input"
+                                />
+                            </div>
+                            <div class="col-5 m-2">
+                                <label for="password_input" class="form-label">كلمة المرور</label>
+                                <input
+                                        type="password"
+                                        class="form-control"
+                                        id="password_input"
+                                        name="password_input"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
@@ -211,9 +345,91 @@
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
     <script src="{% static 'sneat/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js' %}"></script>
     <script>
-        $("#role_choose_input").select2();
-        $("#address_choose_input").select2();
-        $("#birthdate_input").datepicker();
-        $("#start_work_date_input").datepicker();
+        const userDetailsModal = $('#edit_user_details_modal')
+        const userAccountModal = $('#edit_user_account_modal')
+        const roleChooseInput = $("#role_choose_input")
+        const addressChooseInput = $("#address_choose_input")
+        const birthdateInput = $("#birthdate_input")
+        const startWorkDateInput = $("#start_work_date_input")
+        const months = ["يناير", "فبراير", "مارس", "إبريل", "مايو", "يونيو",
+            "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+
+        roleChooseInput.select2();
+        addressChooseInput.select2();
+        birthdateInput.datepicker();
+        startWorkDateInput.datepicker();
+
+        userDetailsModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+
+            const userId = target.dataset.bsId
+            const userDetailsId = target.dataset.bsUserDetailsId
+            const firstName = target.dataset.bsFirstName
+            const gender = target.dataset.bsGender
+            const nationalId = target.dataset.bsNationalId
+            const roleId = target.dataset.bsRole
+            let birthdate = target.dataset.bsBirthdate
+            let startWorkDate = target.dataset.bsStartWorkDate
+
+            birthdate = fixDate(birthdate)
+            startWorkDate = fixDate(startWorkDate)
+
+            const userIdInput = userDetailsModal.find("#edited_user_id_input")
+            const userDetailsInput = userDetailsModal.find("#edited_user_details_id_input")
+            const userNameInput = userDetailsModal.find("#edited_user_name_input")
+            const nationalIdInput = userDetailsModal.find("#edited_national_id_input")
+            const roleChooseInput = userDetailsModal.find("#edited_role_choose_input")
+            const birthdateInput = userDetailsModal.find("#edited_birthdate_input")
+            const genderChooseInput = userDetailsModal.find("#edited_gender_choose_input")
+            const startWorkDateInput = userDetailsModal.find("#edited_start_work_date_input")
+
+
+            roleChooseInput.select2({
+                dropdownParent: userDetailsModal
+            })
+            genderChooseInput.select2({
+                dropdownParent: userDetailsModal
+            })
+
+            birthdateInput.datepicker('setDate', birthdate);
+            startWorkDateInput.datepicker('setDate', startWorkDate);
+
+            userIdInput.val(userId)
+            userDetailsInput.val(userDetailsId)
+            userNameInput.val(firstName)
+            roleChooseInput.val(roleId).trigger("change")
+            genderChooseInput.val(gender).trigger("change")
+            nationalIdInput.val(nationalId)
+
+        })
+
+        userAccountModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+            const userId = target.dataset.bsId
+            const username = target.dataset.bsUsername
+
+            const userIdInput = userAccountModal.find("#edited_user_id_input")
+            const usernameInput = userAccountModal.find("#username_input")
+
+            userIdInput.val(userId)
+            usernameInput.val(username)
+        })
+
+        function fixDate(date) {
+            let arr = date.split(" ")
+            arr[1] = months.indexOf(arr[1].split("،")[0])
+            return new Date(arr[2], arr[1], arr[0])
+        }
+    </script>
+    <script>
+        function numOnly(id) {
+            // Get the element by id
+            let element = document.getElementById(id);
+            // Use numbers only pattern, from 0 to 9 with \-
+            let regex = /[^0-9\-]/gi;
+            // Replace other characters that are not in regex pattern
+            element.value = element.value.replace(regex, "");
+        }
     </script>
 {% endblock %}
