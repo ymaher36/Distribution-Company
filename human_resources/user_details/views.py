@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -149,3 +149,15 @@ def delete_role(request, role_id):
     role.delete()
     reverse_url = reverse("human_resources:other_settings")
     return HttpResponseRedirect(reverse_url)
+
+
+def get_employee_related_to_branch(request):
+    select2_data_list = []
+    branch_id = request.GET.get('branch_id')
+    employees = get_user_model().objects.filter(user_details__branch=branch_id)
+    for employee in employees:
+        select2_data_list.append({
+            'id': employee.id,
+            'name': employee.first_name
+        })
+    return JsonResponse(select2_data_list, safe=False)

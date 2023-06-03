@@ -39,7 +39,7 @@
                     </form>
                 </div>
             </div>
-            {% if products %}
+            {% if products and check %}
                 <div class="card mb-4">
                     <div class="card-header col">
                         <h5 class="mb-0">إضافة فاتورة بيـــــــــع جديدة ( {{ branch.name }} )</h5>
@@ -201,6 +201,26 @@
                             </div>
                             <button type="submit" class="col-3 btn btn-primary m-2">حفظ الفاتورة</button>
                         </form>
+                    </div>
+                </div>
+            {% elif not products and check %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 col-xl-6 col-12">
+                                <h4 class="text-danger">هذا الفرع لا يحتوي على منتجات</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% elif not customers and check %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 col-xl-6 col-12">
+                                <h4 class="text-danger">هذا الفرع لا يحتوي على عملاء</h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endif %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    إضافة موظف
+    اخرى
 {% endblock %}
 {% block styles %}
 
@@ -60,13 +60,8 @@
                                                         <i class="bx bx-dots-vertical-rounded"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="javascript:void(0);"
-                                                        ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                                                        >
                                                         <a class="dropdown-item"
-                                                           href="{% url 'human_resources:delete_role' role.id %}"
-                                                        ><i class="bx bx-trash me-1"></i> حذف</a
-                                                        >
+                                                           href="{% url 'human_resources:delete_role' role.id %}">
                                                     </div>
                                                 </div>
                                             </td>

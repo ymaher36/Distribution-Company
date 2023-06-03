@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -44,7 +44,7 @@ def add_purchase_invoice(request):
             for i in range(0, len(products_form_values), 4):
                 products_dict['product' + str(i // 4)] = products_form_values[i:i + 4]
             for product in products_dict.values():
-                total_price += int(product[2])*int(product[3])
+                total_price += int(product[2]) * int(product[3])
                 total_amount_boxes += int(product[3])
             purchase_invoice = Purchase(
                 branch_id=branch_id,
@@ -107,3 +107,17 @@ def add_purchase_channel(request):
             purchase_channel.save()
     redirect_url = reverse('purchases:purchase_invoice_others')
     return HttpResponseRedirect(redirect_url)
+
+
+def get_invoice_by_branch(request):
+    select2_data_list = []
+    branch_id = request.GET.get('branch_id')
+    invoices = Purchase.objects.filter(branch=branch_id)
+    for invoice in invoices:
+        select2_data_list.append({
+            'id': invoice.id,
+            'name': "المورد: " + invoice.seller.name + ", السعر: " + str(
+                invoice.total_price) + ", شراء عن طريق: " + invoice.purchase_channel.name + ", تاريخ الأستلام: " +
+                    str(invoice.receiving_date)
+        })
+    return JsonResponse(select2_data_list, safe=False)

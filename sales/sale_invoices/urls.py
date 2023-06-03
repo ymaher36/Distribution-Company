@@ -10,5 +10,6 @@ urlpatterns = [
     path('sale-invoice-others/', views.sale_invoice_others, name='sale_invoice_others'),
     path('add-sale-channel/', views.add_sale_channel, name='add_sale_channel'),
     path('get-product-price/', views.get_product_price, name='get_product_price'),
+    path('get-invoice-by-branch/', views.get_invoice_by_branch, name='get_invoice_by_branch'),
 
 ]

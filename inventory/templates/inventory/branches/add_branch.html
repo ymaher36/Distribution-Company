@@ -33,9 +33,6 @@
                                 <div class="col ">
                                     <label for="address_choose_input" class="form-label">اختر العنوان</label>
 
-                                </div>
-                                <div class="col">
-
                                     <select class="form-select"
                                             id="address_choose_input"
                                             name="address_choose_input"
@@ -78,63 +75,162 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-5">إضافة</button>
                     </form>
-                    {#                                            <div class="row">#}
-                    {#                                <div class="divider ">#}
-                    {#                                    <div class="divider-text"></div>#}
-                    {#                                </div>#}
-                    {#                                <h5 class="card-header">جدول المنتجات</h5>#}
-                    {#                                <div class="table-responsive text-nowrap" style="min-height: 400px">#}
-                    {#                                    <table class="table">#}
-                    {#                                        <thead>#}
-                    {#                                        <tr>#}
-                    {#                                            <th>الأسم</th>#}
-                    {#                                            <th>الماركة</th>#}
-                    {#                                            <th>النوع</th>#}
-                    {#                                            <th>أجراءات</th>#}
-                    {#                                        </tr>#}
-                    {#                                        </thead>#}
-                    {#                                        <tbody>#}
-                    {#                                        {% for product in products %}#}
-                    {#                                            <tr>#}
-                    {#                                                <td>#}
-                    {#                                                    <strong>{{ product.name }}</strong>#}
-                    {#                                                </td>#}
-                    {#                                                <td>#}
-                    {#                                                    <strong>{{ product.product_brand }}</strong>#}
-                    {#                                                </td>#}
-                    {#                                                <td>#}
-                    {#                                                    <strong>{{ product.product_category }}</strong>#}
-                    {#                                                </td>#}
-                    {##}
-                    {##}
-                    {#                                                <td>#}
-                    {#                                                    <div class="dropdown">#}
-                    {#                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"#}
-                    {#                                                                data-bs-toggle="dropdown">#}
-                    {#                                                            <i class="bx bx-dots-vertical-rounded"></i>#}
-                    {#                                                        </button>#}
-                    {#                                                        <div class="dropdown-menu">#}
-                    {#                                                            <a class="dropdown-item" href="javascript:void(0);">#}
-                    {#                                                                <i class="bx bx-edit-alt me-1"></i>#}
-                    {#                                                                تعديل#}
-                    {#                                                            </a>#}
-                    {#                                                            <a class="dropdown-item"#}
-                    {#                                                               href="{% url 'inventory:delete_product' product.id %}">#}
-                    {#                                                                <i class="bx bx-trash me-1"></i>#}
-                    {#                                                                حذف#}
-                    {#                                                            </a>#}
-                    {#                                                        </div>#}
-                    {#                                                    </div>#}
-                    {#                                                </td>#}
-                    {#                                            </tr>#}
-                    {#                                        {% endfor %}#}
-                    {#                                        </tbody>#}
-                    {#                                    </table>#}
-                    {##}
-                    {#                                </div>#}
-                    {#                            </div>#}
+                    <div class="row">
+                        <hr>
+                        <h5 class="card-header">جدول بالفروع</h5>
+                        <div class="table-responsive text-nowrap mini-table-container">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>الأسم</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>العنوان</th>
 
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for branch in branches %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ branch.name }}</strong>
+                                        </td>
+                                        <td>
+                                            {% for phone_number in branch.phone_number.all %}
+                                                <strong>{{ phone_number.number }}</strong><br/>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ branch.location }}</strong>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                        data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#edit_branch_modal"
+                                                       data-bs-id="{{ branch.id }}"
+                                                       data-bs-name="{{ branch.name }}"
+                                                       data-bs-type="{{ branch.location.id }}"
+                                                       id="edit_branch"
+                                                       class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        تعديل
+                                                    </a>
+                                                    {#  TODO change icons #}
+                                                    <a data-bs-toggle="modal"
+                                                       data-bs-target="#add_branch_number_modal"
+                                                       data-bs-id="{{ branch.id }}"
+                                                       data-bs-name="{{ branch.name }}"
+                                                       id="add_branch_number"
+                                                       class="dropdown-item" href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        إضافة رقم هاتف
+                                                    </a>
+                                                    <a class="dropdown-item"
+                                                       href="javascript:void(0);">
+                                                        <i class="bx bx-trash me-1"></i>
+                                                        حذف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="edit_branch_modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">تعديل بيانات الفرع</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'inventory:edit_branch' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_branch_id_input" id="edited_branch_id_input">
+                        <div class="row">
+                            <div class="col-5 m-2">
+                                <label for="edited_branch_name_input" class="form-label">أسم الفرع</label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="edited_branch_name_input"
+                                        name="edited_branch_name_input"
+                                        required
+                                />
+                            </div>
+                            <div class="col-6 m-2">
+                                <div class="col ">
+                                    <label for="edited_address_choose_input" class="form-label">اختر العنوان</label>
+
+                                    <select class="form-select"
+                                            id="edited_address_choose_input"
+                                            name="edited_address_choose_input"
+                                            aria-label="Default select example">
+                                        <option disabled hidden selected>ابحث عن عنوان...</option>
+                                        {% for address in addresses %}
+                                            <option value={{ address.id }}>{{ address }}</option>
+
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <small class="text-muted">يجب عليك تسجيل العنوان مسبقًا في الإدارات
+                                        العناوين </small>
+                                    <br/>
+                                    <a class="ml-5" target="_blank" href="{% url "locations:add_address" %}"><small>إلى
+                                        صفحة إضافة العناوين</small></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_branch_number_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="add_branch_phone_number_title">إضافة رقم هاتف للفرع</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'inventory:add_branch_phone_number' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="hidden" name="edited_branch_id_input" id="edited_branch_id_input">
+                        <div class="row">
+                            <div class="col m-2">
+                                <label class="form-label" for="edited_branch_phone_number_input">ادخل رقم هاتف
+                                    الفرع</label>
+                                <input type="text" oninput="numOnly(this.id);" maxlength="11"
+                                       id="edited_branch_phone_number_input" name="edited_branch_phone_number_input"
+                                       class="form-control bootstrap-maxlength-example"
+                                       placeholder="************01"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -145,29 +241,72 @@
 {% block scripts %}
     <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
     <script>
-        $(() => {
-            const address_choose_input = $('#address_choose_input')
-            const address_table_row = $('#address_table_row')
-            const address_table = $('#address_table')
-            const address_table_body = $('#address_table_body')
-            address_table_row.hide()
-            address_choose_input.select2()
+        const addressChooseInput = $('#address_choose_input')
+        const addressTableRow = $('#address_table_row')
+        const addressTableBody = $('#address_table_body')
+        const editBranchModal = $('#edit_branch_modal')
+        const addBranchNumberModal = $('#add_branch_number_modal')
 
-            address_choose_input.on('change', async (e) => {
-                const address_value = e.target.value
-                try {
-                    const response = await fetch(`/locations/address/get-address-data?address_id=${address_value}`)
-                    const data = await response.json();
-                    address_table_body.append(`<tr><td>${data.governorate}</td><td>${data.district}</td><td>${data.street}</td><td>${data.other}</td></tr>`)
-                    address_table_row.show()
 
-                } catch (e) {
-                    console.error(e)
-                }
+        addressTableRow.hide()
+        addressChooseInput.select2()
+
+        addressChooseInput.on('change', async (e) => {
+            const address_value = e.target.value
+            try {
+                const response = await fetch(`/locations/address/get-address-data?address_id=${address_value}`)
+                const data = await response.json();
+                addressTableBody.append(`<tr><td>${data.governorate}</td><td>${data.district}</td><td>${data.street}</td><td>${data.other}</td></tr>`)
+                addressTableRow.show()
+
+            } catch (e) {
+                console.error(e)
+            }
+        })
+
+        editBranchModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+
+            const branchId = target.dataset.bsId
+            const name = target.dataset.bsName
+            const typeId = target.dataset.bsType
+
+            const branchIdInput = editBranchModal.find('#edited_branch_id_input')
+            const branchNameInput = editBranchModal.find('#edited_branch_name_input')
+            const addressChooseInput = editBranchModal.find('#edited_address_choose_input')
+
+            addressChooseInput.select2({
+                dropdownParent: editBranchModal
             })
 
+            branchIdInput.val(branchId)
+            branchNameInput.val(name)
+            addressChooseInput.val(typeId).trigger('change')
+
+        })
+        addBranchNumberModal.on('show.bs.modal', (e) => {
+            const target = e.relatedTarget
+
+            const branchId = target.dataset.bsId
+            const name = target.dataset.bsName
+
+            const branchIdInput = addBranchNumberModal.find('#edited_branch_id_input')
+            const title = addBranchNumberModal.find('#add_branch_phone_number_title')
+
+            branchIdInput.val(branchId)
+            title.html('إضافة رقم هاتف لفرع ' + name)
         })
 
 
+    </script>
+    <script>
+        function numOnly(id) {
+            // Get the element by id
+            let element = document.getElementById(id);
+            // Use numbers only pattern, from 0 to 9 with \-
+            let regex = /[^0-9\-]/gi;
+            // Replace other characters that are not in regex pattern
+            element.value = element.value.replace(regex, "");
+        }
     </script>
 {% endblock %}

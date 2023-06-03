@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    المصروفات
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'finance/includes/navbar.html' with which_nav="expenses" is_search_expenses=True %}
+            <div class="row">
+                <div class="col-xl">
+                    <div class="card mb-4">
+                        <div class="card-header col">
+                            <div class="row mb-4">
+                                <h5 class="mb-0">ابحث عن مصروف</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form action="#" method="GET">
+                                <div class="row">
+                                    <div class="col">
+
+                                        <div class="mb-3">
+                                            {#                                            <label for="governorate_choose_input" class="form-label">اختر#}
+                                            {#                                                المحافظة</label>#}
+                                            {#                                            <select id="governorate_choose_input"#}
+                                            {#                                                    name="governorate_choose_input"#}
+                                            {#                                                    class="select2 form-select form-select-lg" data-allow-clear="false">#}
+                                            {#                                                <option disabled hidden selected value="">ابحث عن محافظة...</option>#}
+                                            {#                                                {% for governorate in governorates %}#}
+                                            {#                                                    <option value="{{ governorate.id }}">{{ governorate.name }}</option>#}
+                                            {#                                                {% endfor %}#}
+                                            {#                                            </select>#}
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <div class="mb-3">
+                                            {#                                            <label for="district_choose_input" class="form-label">اختر المنطقة</label>#}
+                                            {#                                            <select class="form-select"#}
+                                            {#                                                    id="district_choose_input"#}
+                                            {#                                                    name="district_choose_input"#}
+                                            {#                                                    aria-label="Default select example">#}
+                                            {#                                                <option disabled hidden selected>ابحث عن منطقة...</option>#}
+                                            {#                                            </select>#}
+                                        </div>
+
+                                    </div>
+                                </div>
+                                {#                                <div class="row">#}
+                                {#                                    <hr>#}
+                                {#                                    <h5 class="card-header">جدول بآخر 10 عناوين تمت إضافتها</h5>#}
+                                {#                                    <div class="table-responsive text-nowrap mini-table-container">#}
+                                {#                                        <table class="table">#}
+                                {#                                            <thead>#}
+                                {#                                            <tr>#}
+                                {#                                                <th>المحافظة</th>#}
+                                {#                                                <th>المنطقة</th>#}
+                                {#                                                <th>الشارع</th>#}
+                                {#                                                <th>معلومات اضافية</th>#}
+                                {#                                                <th>أجراءات</th>#}
+                                {#                                            </tr>#}
+                                {#                                            </thead>#}
+                                {#                                            <tbody>#}
+                                {#                                            {% for address in latest_addresses %}#}
+                                {#                                                <tr>#}
+                                {#                                                    <td>#}
+                                {#                                                        <strong>{{ address.governorate }}</strong>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td>#}
+                                {#                                                        <strong>{{ address.district.name_ar }}</strong>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td>#}
+                                {#                                                        <strong>{{ address.street }}</strong>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td>#}
+                                {#                                                        <strong>{{ address.other }}</strong>#}
+                                {#                                                    </td>#}
+                                {#                                                    <td>#}
+                                {#                                                        <div class="dropdown">#}
+                                {#                                                            <button type="button"#}
+                                {#                                                                    class="btn p-0 dropdown-toggle hide-arrow"#}
+                                {#                                                                    data-bs-toggle="dropdown">#}
+                                {#                                                                <i class="bx bx-dots-vertical-rounded"></i>#}
+                                {#                                                            </button>#}
+                                {#                                                            <div class="dropdown-menu">#}
+                                {#                                                                <a data-bs-toggle="modal"#}
+                                {#                                                                   data-bs-target="#edit_location_modal"#}
+                                {#                                                                   data-bs-id="{{ address.id }}"#}
+                                {#                                                                   data-bs-governorate="{{ address.governorate_id }}"#}
+                                {#                                                                   data-bs-district="{{ address.district.id }}"#}
+                                {#                                                                   data-bs-street="{{ address.street }}"#}
+                                {#                                                                   data-bs-other="{{ address.other }}"#}
+                                {#                                                                   id="edit_location"#}
+                                {#                                                                   class="dropdown-item" href="javascript:void(0);">#}
+                                {#                                                                    <i class="bx bx-edit-alt me-1"></i>#}
+                                {#                                                                    تعديل#}
+                                {#                                                                </a>#}
+                                {#                                                                <a class="dropdown-item"#}
+                                {#                                                                        href="{% url 'locations:delete_address' address.id %}">#}
+                                {#                                                                <i class="bx bx-trash me-1"></i>#}
+                                {#                                                                حذف</a>#}
+                                {#                                                            </div>#}
+                                {#                                                        </div>#}
+                                {#                                                    </td>#}
+                                {#                                                </tr>#}
+                                {#                                            {% endfor %}#}
+                                {##}
+                                {##}
+                                {#                                            </tbody>#}
+                                {#                                        </table>#}
+                                {##}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+
+                                <button type="submit" class="btn btn-primary m-2">بحث</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script></script>
+
+{% endblock %}

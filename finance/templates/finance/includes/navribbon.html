@@ -1,0 +1,18 @@
+{% if which_nav == 'suppliers' %}
+    {% if is_search_supplier %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> قائمة الموردين</h4>
+    {% elif is_add_supplier %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> إضافة مورد</h4>
+    {% elif is_others_supplier %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">الموردين/ </span> اخرى</h4>
+    {% endif %}
+{% endif %}
+{% if which_nav == 'purchase_invoices' %}
+    {% if is_search_purchase_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> قائمة الفواتير</h4>
+    {% elif is_add_purchase_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> إضافة فاتورة</h4>
+    {% elif is_others_purchase_invoice %}
+        <h4 class="fw-bold py-3 m-4"><span class="text-muted fw-light">فواتير الشـــــــراء/ </span> اخرى</h4>
+    {% endif %}
+{% endif %}

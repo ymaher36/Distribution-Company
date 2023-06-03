@@ -11,5 +11,6 @@ urlpatterns = [
     path('user-accounts/', views.user_accounts, name='user_accounts'),
     path('other-settings/', views.other_settings, name='other_settings'),
     path('add-role/', views.add_role, name='add_role'),
-    path('delete-role/<uuid:role_id>/', views.delete_role, name='delete_role')
+    path('delete-role/<uuid:role_id>/', views.delete_role, name='delete_role'),
+    path('get-employee-related-to-branch/', views.get_employee_related_to_branch, name='get_employee_related_to_branch')
 ]

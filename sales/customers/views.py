@@ -121,6 +121,7 @@ def add_type(request):
     return HttpResponseRedirect(redirect_url)
 
 
+# ToDo handle soft-delete in all project
 def get_branch_customers(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')

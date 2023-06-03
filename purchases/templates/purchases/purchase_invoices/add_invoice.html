@@ -205,7 +205,7 @@
                 try {
 
 
-                    const response = await fetch(`/purchases/suppliers/get-branch-suppliers?branch_id=${branch_value}`);
+                    const response = await fetch(`/purchases/suppliers/get-branch-suppliers/?branch_id=${branch_value}`);
                     const data = await response.json();
                     supplier_choose_input.empty()
                     data.forEach(elem => {

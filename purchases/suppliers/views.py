@@ -125,7 +125,7 @@ def add_type(request):
 def get_branch_suppliers(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')
-    suppliers = Supplier.objects.filter(branch_id=branch_id)
+    suppliers = Supplier.objects.filter(branch=branch_id)
     for supplier in suppliers:
         select2_data_list.append({
             'id': supplier.id,

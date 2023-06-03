@@ -23,15 +23,18 @@ def search_sale_invoice(request):
 
 def add_sale_invoice(request):
     branches = Branch.objects.all() if request.user.is_superuser else request.user.user_details.branch.all
+    check = False
     context = {
         'branches': branches,
+        'check': check,
     }
     if request.GET:
         get_branch_form = GetBranchForm(request.GET)
+        check = True
         if get_branch_form.is_valid():
             branch_id = get_branch_form.cleaned_data.get('branch_choose_input')
             branch = Branch.objects.filter(id=branch_id).first()
-            customers = Customer.objects.filter(branch_id=branch_id)
+            customers = branch.customer_set.all()
             sale_channels = SellingChannel.objects.all()
             employees = get_user_model().objects.filter(user_details__branch__id=branch_id)
             products = PurchaseProduct.objects.filter(purchase__branch_id=branch_id,
@@ -44,6 +47,7 @@ def add_sale_invoice(request):
             context["customers"] = customers
             context["sale_channels"] = sale_channels
             context["employees"] = employees
+            context["check"] = check
         else:
             print(get_branch_form.errors)
     elif request.POST:
@@ -66,7 +70,6 @@ def add_sale_invoice(request):
             created_by_employee_id = invoice_form.cleaned_data.get('created_by_employee_choose_input')
             receiving_date = invoice_form.cleaned_data.get('receiving_date_input')
             note = invoice_form.cleaned_data.get('note_input')
-            print(invoice_form.cleaned_data)
             discount = invoice_form.cleaned_data.get('discount_input')
             for i in range(0, len(products_form_values), 3):
                 products_dict['product' + str(i // 3)] = products_form_values[i:i + 3]
@@ -93,7 +96,6 @@ def add_sale_invoice(request):
                         product_id = product[0]
                         price = product[1]
                         quantity = product[2]
-                        # ToDo handle price in OrderProducts model. Either by allowing editing the pricelist price or creating an discount on total invoice
 
                         purchase_product = OrderProducts(
                             order_id=sale_invoice.id,
@@ -144,7 +146,7 @@ def get_price_list_by_branch(request):
     if branch_id == "all":
         products = PricingList.objects.filter(end_date__isnull=True).order_by('product__product')
     else:
-        products = PricingList.objects.filter(end_date__isnull=True, product__purchase__branch_id=branch_id).order_by(
+        products = PricingList.objects.filter(end_date__isnull=True, product__purchase__branch=branch_id).order_by(
             'product__product')
     for product in products:
         table_data_list.append(
@@ -177,5 +179,18 @@ def add_sale_channel(request):
 
 def get_product_price(request):
     product_id = request.GET.get('product_id')
-    price = PricingList.objects.filter(product_id=product_id, end_date__isnull=True).first().selling_price
+    price = PricingList.objects.filter(product=product_id, end_date__isnull=True).first().selling_price
     return JsonResponse(price, safe=False)
+
+def get_invoice_by_branch(request):
+    select2_data_list = []
+    branch_id = request.GET.get('branch_id')
+    invoices = Order.objects.filter(branch=branch_id)
+    for invoice in invoices:
+        select2_data_list.append({
+            'id': invoice.id,
+            'name': "العميل: " + invoice.customer.name + ", السعر: " + str(
+                invoice.total_price) + ", بيع عن طريق: " + invoice.selling_channel.name + ", تاريخ الأستلام: " +
+                    str(invoice.receiving_date)
+        })
+    return JsonResponse(select2_data_list, safe=False)

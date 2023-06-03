@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    إضافة مصروف
+{% endblock %}
+{% block body %}
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <!-- Layout Demo -->
+            {% include 'finance/includes/navbar.html' with which_nav="expenses" is_add_expenses=True %}
+            <div class="row">
+                <div class="col-xl">
+                    <div class="card mb-4">
+                        <div class="card-header col">
+                            <div class="row mb-4">
+                                <h5 class="mb-0">إضافة مصروف جديد</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form action="{% url "finance:add_expenses" %}" method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="branch_choose_input" class="form-label">اختر الفرع</label>
+                                            <select class="form-select"
+                                                    id="branch_choose_input"
+                                                    name="branch_choose_input"
+                                                    aria-label="Default select example">
+                                                <option disabled hidden selected>ابحث عن فرع...</option>
+                                                {% for branch in branches %}
+                                                    <option value="{{ branch.id }}">{{ branch.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="created_by_input" class="form-label">الموظف الذي أنشأ
+                                                المصروف</label>
+                                            {% if user.is_superuser %}
+                                                <select id="created_by_input"
+                                                        name="created_by_input"
+                                                        class="select2 form-select form-select-lg"
+                                                        data-allow-clear="false"
+                                                        disabled>
+                                                    <option disabled hidden selected value="">ابحث عن موظف...
+                                                    </option>
+                                                    {% for employee in employees %}
+                                                        <option value="{{ employee.id }}">{{ employee.first_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <input type="hidden" value="{{ user.id }}" name="created_by_input">
+                                                <h4 class="row justify-content-center">{{ user.first_name }}</h4>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label for="type_choose_input" class="form-label">اختر نوع المصروف</label>
+                                            <select id="type_choose_input"
+                                                    name="type_choose_input"
+                                                    class="select2 form-select form-select-lg" data-allow-clear="false">
+                                                <option disabled hidden selected value="">ابحث عن نوع المصروف...
+                                                </option>
+                                                {% for type in types %}
+                                                    <option value="{{ type.id }}">{{ type.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label" for="expense_price_input">سعر المصروف</label>
+                                        <input type="text" oninput="numOnly(this.id);" maxlength="11"
+                                               id="expense_price_input" name="expense_price_input"
+                                               class="form-control bootstrap-maxlength-example"/>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" for="other_input">أدخل التفاصيل</label>
+                                        <textarea id="other_input" name="other_input"
+                                                  class="form-control bootstrap-maxlength-example" rows="3"
+                                                  maxlength="500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <p class="demo-inline-spacing">
+                                                <a class="btn btn-primary me-1" data-bs-toggle="collapse"
+                                                   href="#collapsePurchase" role="button" aria-expanded="false"
+                                                >ربط مع فاتورة شراء</a>
+                                                <a class="btn btn-primary me-1" data-bs-toggle="collapse"
+                                                   href="#collapseOrder" role="button" aria-expanded="false"
+                                                >ربط مع فاتورة بيع</a>
+                                            </p>
+                                            <div class="collapse" id="collapsePurchase">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label for="purchase_choose_input" class="form-label">اختر
+                                                                فتورة شراء</label>
+                                                            <select class="form-select"
+                                                                    id="purchase_choose_input"
+                                                                    name="purchase_choose_input"
+                                                                    aria-label="Default select example" disabled>
+                                                                <option disabled hidden selected>ابحث عن فتورة...
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="collapseOrder">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label for="order_choose_input" class="form-label">اختر
+                                                                فتورة بيع</label>
+                                                            <select class="form-select"
+                                                                    id="order_choose_input"
+                                                                    name="order_choose_input"
+                                                                    aria-label="Default select example" disabled>
+                                                                <option disabled hidden selected>ابحث عن فتورة...
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <button type="submit" class="btn btn-primary m-2">إضافة</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'sneat/vendor/libs/select2/select2.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'sneat/vendor/libs/select2/select2.js' %}"></script>
+    <script>
+        const createdByInput = $('#created_by_input')
+        const typeChooseInput = $('#type_choose_input')
+        const branchChooseInput = $('#branch_choose_input')
+        const collapsePurchase = $('#collapsePurchase')
+        const collapseOrder = $('#collapseOrder')
+        const purchaseChooseInput = $('#purchase_choose_input')
+        const orderChooseInput = $('#order_choose_input')
+
+        createdByInput.is('select') ? createdByInput.select2() : null
+        typeChooseInput.select2()
+        branchChooseInput.select2()
+        purchaseChooseInput.select2({placeholder: "ابحث عن فتورة..."})
+        orderChooseInput.select2({placeholder: "ابحث عن فتورة..."})
+
+        branchChooseInput.on('change', async (e) => {
+            createdByInput.attr('disabled', true)
+            orderChooseInput.attr('disabled', true)
+            purchaseChooseInput.attr('disabled', true)
+            const branch_id = e.target.value
+            const createdByResponse = await fetch(`http://127.0.0.1:8000/human-resources/users/get-employee-related-to-branch/?branch_id=${branch_id}`)
+            const createdByData = await createdByResponse.json()
+            createdByInput.empty()
+            createdByData.forEach(elem => {
+                createdByInput.append(new Option(elem.name, elem.id, false, false))
+            })
+            createdByInput.val('')
+            createdByData.length ? createdByInput.attr('disabled', false) : createdByInput.attr('disabled', true)
+
+            const orderResponse = await fetch(`http://127.0.0.1:8000/sales/sale-invoices/get-invoice-by-branch/?branch_id=${branch_id}`)
+            const orderData = await orderResponse.json()
+            orderChooseInput.empty()
+            orderData.forEach(elem => {
+                orderChooseInput.append(new Option(elem.name, elem.id, false, false))
+            })
+            orderChooseInput.val('').trigger('change')
+            orderData.length ? orderChooseInput.attr('disabled', false) : orderChooseInput.attr('disabled', true)
+
+            const purchaseResponse = await fetch(`http://127.0.0.1:8000/purchases/purchase-invoices/get-invoice-by-branch/?branch_id=${branch_id}`)
+            const purchaseData = await purchaseResponse.json()
+            purchaseChooseInput.empty()
+            purchaseData.forEach(elem => {
+                purchaseChooseInput.append(new Option(elem.name, elem.id, false, false))
+            })
+            purchaseChooseInput.val('').trigger('change')
+            purchaseData.length ? purchaseChooseInput.attr('disabled', false) : purchaseChooseInput.attr('disabled', true)
+
+        })
+        collapsePurchase.on('show.bs.collapse', (e) => {
+            if (e.type === 'show' && collapseOrder.is(":visible")) {
+                orderChooseInput.val('').trigger('change')
+                collapseOrder.collapse("hide")
+            }
+        })
+        collapseOrder.on('show.bs.collapse', (e) => {
+            if (e.type === 'show' && collapsePurchase.is(":visible")) {
+                purchaseChooseInput.val('').trigger('change')
+                collapsePurchase.collapse("hide")
+            }
+        })
+    </script>
+    <script>
+        function numOnly(id) {
+            // Get the element by id
+            let element = document.getElementById(id);
+            // Use numbers only pattern, from 0 to 9 with \-
+            let regex = /[^0-9\-]/gi;
+            // Replace other characters that are not in regex pattern
+            element.value = element.value.replace(regex, "");
+        }
+
+    </script>
+
+{% endblock %}
