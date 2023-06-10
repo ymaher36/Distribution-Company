@@ -14,10 +14,10 @@ def search_customer(request):
 
 
 def add_customer(request):
-    branches = Branch.objects.all()
+    branches = Branch.active.all()
     addresses = Location.objects.all()
     types = CustomerType.objects.all()
-    latest_customers = Customer.objects.all().order_by('-created_at')[:10]
+    latest_customers = Customer.active.all().order_by('-created_at')[:10]
     if request.POST:
         form = AddCustomer(request.POST)
         if form.is_valid():
@@ -125,7 +125,7 @@ def add_type(request):
 def get_branch_customers(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')
-    customers = Customer.objects.filter(branch_id=branch_id)
+    customers = Customer.active.filter(branch_id=branch_id)
     for customer in customers:
         select2_data_list.append({
             'id': customer.id,

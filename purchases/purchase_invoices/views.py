@@ -19,8 +19,8 @@ def search_purchase_invoice(request):
 
 
 def add_purchase_invoice(request):
-    branches = Branch.objects.all()
-    products = Product.objects.all()
+    branches = Branch.active.all()
+    products = Product.active.all()
     purchase_channel = PurchasingChannel.objects.all()
 
     if request.POST:

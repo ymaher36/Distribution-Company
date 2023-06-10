@@ -10,7 +10,7 @@ from inventory.products.models import Brand, ProductCategory, Product
 def search_products(request):
     brands = Brand.objects.all()
     categories = ProductCategory.objects.all()
-    products = Product.objects.all().order_by("-created_at")
+    products = Product.active.all().order_by("-created_at")
 
     if request.GET:
         form = SearchProductForm(request.GET)
@@ -31,7 +31,7 @@ def search_products(request):
 def add_products(request):
     brands = Brand.objects.all()
     categories = ProductCategory.objects.all()
-    products = Product.objects.all().order_by("-created_at")[:10]
+    products = Product.active.all().order_by("-created_at")[:10]
 
     if request.method == "POST":
         form = AddProductForm(request.POST)

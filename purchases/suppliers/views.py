@@ -15,10 +15,10 @@ def search_supplier(request):
 
 
 def add_supplier(request):
-    branches = Branch.objects.all()
+    branches = Branch.active.all()
     addresses = Location.objects.all()
     types = SupplierType.objects.all()
-    latest_suppliers = Supplier.objects.all().order_by('-created_at')[:10]
+    latest_suppliers = Supplier.active.all().order_by('-created_at')[:10]
     if request.POST:
         form = AddSupplier(request.POST)
         if form.is_valid():
@@ -125,7 +125,7 @@ def add_type(request):
 def get_branch_suppliers(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')
-    suppliers = Supplier.objects.filter(branch=branch_id)
+    suppliers = Supplier.active.filter(branch=branch_id)
     for supplier in suppliers:
         select2_data_list.append({
             'id': supplier.id,

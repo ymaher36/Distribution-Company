@@ -18,7 +18,8 @@ def user_details(request):
 
 
 def add_user(request):
-    latest_users = get_user_model().objects.filter(is_superuser=False, is_active=True).order_by('-date_joined')[:10]
+    latest_users = get_user_model().objects.filter(is_superuser=False, is_active=True,
+                                                   user_details__is_deleted=False).order_by('-date_joined')[:10]
     roles = Role.objects.all()
     addresses = Location.objects.all()
     if request.method == "POST":
@@ -53,9 +54,8 @@ def add_user(request):
 
 
 def delete_user(request, user_id):
-    user = get_user_model().objects.filter(id=user_id).first()
-    user.is_active = False
-    user.save()
+    user_details = UserDetails.objects.filter(user=user_id)
+    user_details.delete()
     reverse_url = reverse("human_resources:add_user")
     return HttpResponseRedirect(reverse_url)
 
@@ -154,7 +154,8 @@ def delete_role(request, role_id):
 def get_employee_related_to_branch(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')
-    employees = get_user_model().objects.filter(user_details__branch=branch_id)
+    employees = get_user_model().objects.filter(user_details__branch=branch_id,is_superuser=False, is_active=True,
+                                                   user_details__is_deleted=False)
     for employee in employees:
         select2_data_list.append({
             'id': employee.id,

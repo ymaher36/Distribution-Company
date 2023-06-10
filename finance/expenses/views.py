@@ -13,7 +13,7 @@ def search_expenses(request):
 
 def add_expenses(request):
     types = ExpenseType.objects.all()
-    branches = Branch.objects.all() if request.user.is_superuser else request.user.user_details.branch.all
+    branches = Branch.active.all() if request.user.is_superuser else request.user.user_details.branch.all
     if request.method == "POST":
         form = AddExpense(request.POST)
         if form.is_valid():

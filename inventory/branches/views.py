@@ -14,7 +14,7 @@ def branches_settings(request):
 
 
 def add_branch(request):
-    branches = Branch.objects.all()
+    branches = Branch.active.all()
     addresses = Location.objects.all()
     form = AddBranch()
     if request.POST:
@@ -78,9 +78,10 @@ def add_branch_phone_number(request):
 
 
 def add_employee_to_branch(request):
-    branches = Branch.objects.all()
-    employees = get_user_model().objects.filter(is_superuser=False, is_active=True)
-    employees_no_branch = employees.filter(user_details__branch__isnull=True, is_superuser=False, is_active=True)
+    branches = Branch.active.all()
+    employees = get_user_model().objects.filter(is_superuser=False, is_active=True, user_details__is_deleted=False)
+    employees_no_branch = employees.filter(user_details__branch__isnull=True, is_superuser=False, is_active=True,
+                                           user_details__is_deleted=False)
     branch_employees = []
     if request.GET:
         branch_id = request.GET.get('branch_name_choose_input')

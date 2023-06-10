@@ -22,7 +22,7 @@ def search_sale_invoice(request):
 
 
 def add_sale_invoice(request):
-    branches = Branch.objects.all() if request.user.is_superuser else request.user.user_details.branch.all
+    branches = Branch.active.all() if request.user.is_superuser else request.user.user_details.branch.all
     check = False
     context = {
         'branches': branches,
@@ -36,7 +36,9 @@ def add_sale_invoice(request):
             branch = Branch.objects.filter(id=branch_id).first()
             customers = branch.customer_set.all()
             sale_channels = SellingChannel.objects.all()
-            employees = get_user_model().objects.filter(user_details__branch__id=branch_id)
+            employees = get_user_model().objects.filter(user_details__branch__id=branch_id, is_superuser=False,
+                                                        is_active=True,
+                                                        user_details__is_deleted=False)
             products = PurchaseProduct.objects.filter(purchase__branch_id=branch_id,
                                                       sold_amount__lt=F('quantity')).annotate(
                 selling_price=Subquery(
@@ -115,7 +117,7 @@ def add_sale_invoice(request):
 
 def price_list(request):
     products = PurchaseProduct.objects.filter(sold_amount__lt=F('quantity')).order_by('product')
-    branches = Branch.objects.all()
+    branches = Branch.active.all()
     if request.POST:
         form = EditPriceListForm(request.POST)
         if form.is_valid():
@@ -182,10 +184,11 @@ def get_product_price(request):
     price = PricingList.objects.filter(product=product_id, end_date__isnull=True).first().selling_price
     return JsonResponse(price, safe=False)
 
+
 def get_invoice_by_branch(request):
     select2_data_list = []
     branch_id = request.GET.get('branch_id')
-    invoices = Order.objects.filter(branch=branch_id)
+    invoices = Order.active.filter(branch=branch_id)
     for invoice in invoices:
         select2_data_list.append({
             'id': invoice.id,
